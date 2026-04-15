@@ -1,0 +1,40 @@
+Co pływa po wodzie?|Statek,Samolot,Samochód,Rower|0|seasy
+Jakiego koloru jest morze?|Niebieskie,Czerwone,Zielone,Żółte|0|seasy
+Kto mieszka w muszli?|Ryba,Krab,Słoń,Ptak|1|seasy
+Co daje fale na morzu?|Wiatr,Piłka,Drzewo,Kamień|0|seasy
+Pływak Argo to:|Bujający statek,Morska zabawka,Boja badawcza,Ryba|2|seasy
+Co możemy znaleźć na plaży?|Piasek,Śnieg,Kwiaty,Kamień|0|seasy
+Kto mieszka w oceanie?|Ryby,Psy,Ptaki,Koty|0|seasy
+Co można zbierać na plaży?|Muszle,Książki,Samochody,Klocki|0|seasy
+Pływak Argo wygląda jak:|Mała żółta boja,Samolot,Kot,Książka|0|seasy
+Co unosi się na wodzie?|Drewniana deska,Kamień,Ziemniak,Krzesło|0|seasy
+Fale morskie powstają głównie na skutek:|pływów,wiatru,prądów,opadów|1|easy
+Jednostką prędkości wiatru jest:|Pa,m/s,°C,m|1|easy
+Cofka to:|spadek poziomu morza,podniesienie poziomu morza przy brzegu,brak fal,zmiana zasolenia|1|easy
+Najspokojniejsze morze występuje zwykle przy:|silnym wietrze,braku wiatru,sztormie,niskim ciśnieniu|1|easy
+Bałtyk jest morzem:|otwartym,półzamkniętym,tropikalnym,oceanem|1|easy
+Sztorm na morzu oznacza:|ciszę,silny wiatr i wysokie fale,spadek ciśnienia,wysokie zasolenie|1|easy
+Pływaki Argo służą do:|mierzenia głębokości stawów,pomiary oceanograficzne,wyławiania ryb,stania na plaży|1|easy
+Wiatr północny w Polsce wieje od:|południa,północy,wschodu,zachodu|1|easy
+Morze jest słone bo:|słońce paruje wodę,woda deszczowa jest słona,prądy mieszają sól,ryby solą wodę|0|easy
+Sinice w morzu są efektem:|czystości wody,wysokiej temperatury i składników odżywczych,wiatru,prądów|1|easy
+Jeśli okres fali wynosi 5 s to częstotliwość wynosi:|5 Hz,0.5 Hz,0.2 Hz,1 Hz|2|medium
+Okres fali to czas:|między grzbietami,jednego obrotu Ziemi,między kolejnymi grzbietami,narastania fali|2|medium
+Który czynnik NAJBARDZIEJ wpływa na wysokość fali?|zasolenie,temperatura,wiatr,opady|2|medium
+Co to jest cofka?|gwałtowny odpływ wody,podniesienie poziomu przy brzegu,spadek ciśnienia,prąd|1|medium
+Fala martwa powstaje gdy:|nie ma wiatru,jest sztorm,prąd przyspiesza,ciepła woda opada|0|medium
+Temperatura wody wpływa na:|prędkość wiatru,gęstość wody i prądy,położenie plaży,pH wody|1|medium
+Prądy powierzchniowe są wywołane głównie przez:|wiatr,pływy,słońce,ryby|0|medium
+Pływaki Argo pomagają w prognozowaniu:|pogody w górach,prądów i temperatury oceanu,kierunku wiatrów lądowych,poziomu jezior|1|medium
+Jak działa Boja Argo?|rejestruje tylko fale,mierzy temperaturę i zasolenie,wypuszcza ryby,podnosi poziom wody|1|medium
+Kiedy występuje największe wzburzenie w Bałtyku?|latem,zimą,wiosną,jesienią|3|medium
+Podwojenie prędkości wiatru powoduje wzrost energii około:|2x,3x,4x,8x|2|hard
+Dlaczego prognozy fal mają ograniczoną dokładność?|modele są złe,morze jest chaotyczne,brak komputerów,za dużo danych|1|hard
+Wzrost poziomu morza o 0.5 m powoduje ryzyko zalania:|liniowe,malejące,nieliniowe,brak zmian|2|hard
+Model numeryczny najlepiej służy do:|dokładnej pogody za miesiąc,analizy scenariuszy,zgadywania,zastąpienia pomiarów|1|hard
+Efekt Coriolisa wpływa na:|wiatr i prądy,tylko na fale,pH wody,położenie plaży|0|hard
+Martwe strefy w morzu są wynikiem:|wysokiego tlenu,niskiego tlenu i nadmiaru składników,wiatru,pływów|1|hard
+Pływaki Argo w ciężkich warunkach:|nie działają,pływają i rejestrują dane,toną,zmieniają kierunek wiatru|1|hard
+Argo dostarcza dane o:|Temperaturze zasoleniu i prądach,Pogodzie w górach,Ruchu samolotów,Ruchu ptaków|0|hard
+Największe fale na Bałtyku są zwykle przy wiatrach:|południowych,wschodnich,zachodnich,północnych|3|hard
+Zjawisko cofki jest szczególnie groźne dla:|statków w porcie,plażowiczów,rybaków przy brzegu,wszystkich powyższych|3|hard
