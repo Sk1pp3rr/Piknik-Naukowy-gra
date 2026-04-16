@@ -4,10 +4,10 @@ let puzzleMoves = 0, puzzleStartTime = 0, puzzleActive = false;
 let currentPuzzleLevel = '';
 let currentShuffleAmount = 'full';
 
+// Tutaj można dodać więcej obrazków do układania, wystarczy dodać je do folderu assets/images i wpisać nazwę w tablicy poniżej
 const myImages = [
-    'puzzle1.jpg',
-    'puzzle2.jpg',
-    'puzzle3.jpg'
+    'puzzle2.png',
+    'puzzle3.png'
 ];
 let currentImageUrl = '';
 
@@ -16,7 +16,11 @@ function openPuzzleMenu() { showScreen('screen-puzzle-menu'); }
 function openPuzzle(levelName, shuffleAmount) {
     currentPuzzleLevel = levelName;
     currentShuffleAmount = shuffleAmount;
-    currentImageUrl = myImages[Math.floor(Math.random() * myImages.length)];
+    
+    let wylosowanaNazwa = myImages[Math.floor(Math.random() * myImages.length)];
+    
+    // Dodanie prefixu folderu do nazwy
+    currentImageUrl = 'assets/images/' + wylosowanaNazwa;
     
     showScreen('screen-puzzle');
     document.getElementById('btn-puzzle-start').style.display = 'inline-block';

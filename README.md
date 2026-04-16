@@ -66,6 +66,19 @@ Puzzle: Najpierw najkrótszy czas, potem najmniej ruchów.
 
 Wiry: Najkrótsza trasa (najmniej punktów dystansu).
 
+### 4. Jak zresetować / wyczyścić wyniki (Hall of Fame)?
+Ponieważ wyniki zapisują się na stałe w pamięci przeglądarki, "zwykłe" odświeżenie strony ich nie usunie. Aby wyczyścić tabelę, wykonaj te kroki:
+
+**Szybki reset przez Konsolę (Zalecane):**
+1. Otwórz grę w przeglądarce.
+2. Wciśnij klawisz **F12** (lub kliknij Prawym Przyciskiem Myszy -> *Zbadaj*), aby otworzyć Narzędzia Deweloperskie.
+3. Przejdź do zakładki **Console** (Konsola).
+4. Wpisz poniższą komendę i wciśnij Enter:
+   `localStorage.removeItem('morskieScoresArcade');`
+5. Odśwież stronę (klawisz **F5**). Tabela wyników będzie znowu pusta!
+
+*(Alternatywnie możesz po prostu wyczyścić "Dane witryn i pliki cookie" w ustawieniach historii przeglądarki).*
+
 ## Kompliacja do exe
 Jeśli edytowałeś plik start_gra.py i chcesz wygenerować nowy plik wykonywalny:
 

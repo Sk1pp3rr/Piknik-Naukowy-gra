@@ -18,7 +18,7 @@ async function startQuiz(level) {
     currentQuizLevel = level.toUpperCase();
     let loadedQuestions = [];
     
-    console.log("🕵️‍♂️ Próbuję załadować plik quiz.txt...");
+    console.log("Próbuję załadować plik quiz.txt...");
 
     try {
         const response = await fetch('quiz.txt?t=' + Date.now());
@@ -36,15 +36,15 @@ async function startQuiz(level) {
                         level: parts[3].trim().replace(/\r/g, '').toLowerCase() 
                     }); 
                 } else {
-                    console.warn(`⚠️ Błąd struktury w linijce ${index + 1}: ${line}`);
+                    console.warn(`Błąd struktury w linijce ${index + 1}: ${line}`);
                 }
             });
-            console.log(`🎯 Pomyślnie wczytano ${loadedQuestions.length} pytań z pliku.`);
+            console.log(`Pomyślnie wczytano ${loadedQuestions.length} pytań z pliku.`);
         } else {
-            console.error(`❌ Serwer nie znalazł pliku (Błąd ${response.status}).`);
+            console.error(`Serwer nie znalazł pliku (Błąd ${response.status}).`);
         }
     } catch (e) { 
-        console.error("❌ Błąd sieci (brak serwera) - ładuję bazę z kodu."); 
+        console.error("Błąd sieci (brak serwera) - ładuję bazę z kodu."); 
     }
 
     if (loadedQuestions.length === 0) {
