@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Quiz from './components/quiz'
 import Puzzle from './components/puzzle'
+import Wiry from './components/wiry'
 
 // Definiujemy w TypeScript, jakie mamy dostępne ekrany (zapobiega literówkom!)
 type Screen = 'menu' | 'wiry' | 'puzzle' | 'quiz' | 'scoreboard';
@@ -56,12 +57,7 @@ function App() {
 
       // Zastępcze ekrany - zbudujemy je w następnych krokach!
       case 'wiry':
-        return (
-          <div>
-            <h2 className="text-3xl text-blue-900 font-bold mb-4">Wiry w budowie 🚧</h2>
-            <button onClick={() => setCurrentScreen('menu')} className="bg-orange-500 hover:bg-orange-400 text-white font-bold py-2 px-6 rounded-full">Wróć do Menu</button>
-          </div>
-        );
+        return <Wiry goBack={() => setCurrentScreen('menu')} />;
       case 'puzzle':
         return <Puzzle goBack={() => setCurrentScreen('menu')} />;
       case 'quiz':
