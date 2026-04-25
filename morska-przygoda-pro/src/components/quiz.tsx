@@ -15,7 +15,7 @@ const fallbackQuestions: Question[] = [
   { level: "hard", q: "Pływaki Argo w ciężkich warunkach: (Awaryjne)", a: ["nie działają", "pływają i rejestrują dane", "toną", "zmieniają kierunek wiatru"], c: 1 }
 ];
 
-export default function Quiz({ goBack }: { goBack: () => void }) {
+export default function Quiz({ goBack, onSaveScore }: { goBack: () => void, onSaveScore: (g: string, t: string, n: number, tm: number | null) => void }) {
   const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -139,8 +139,11 @@ export default function Quiz({ goBack }: { goBack: () => void }) {
           <p className="text-xl text-blue-800 mb-2">Wynik: <span className="font-bold text-green-600 text-3xl block">{percent}%</span></p>
           <p className="text-xl text-blue-800">Czas: <span className="font-bold text-orange-500">{timeTaken} sekund</span></p>
         </div>
-        <button className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 border-4 border-blue-900 font-extrabold py-3 px-8 rounded-full shadow-lg transform transition hover:-translate-y-1 text-xl">
-          Zapisz Wynik
+        <button 
+            onClick={() => onSaveScore(`QUIZ (${selectedLevel?.toUpperCase()})`, `${percent}%`, percent, timeTaken)} 
+            className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 border-4 border-blue-900 font-extrabold py-3 px-8 rounded-full shadow-lg transform transition hover:-translate-y-1 text-xl"
+            >
+              Zapisz Wynik
         </button>
         <button onClick={goBack} className="mt-4 text-gray-500 hover:text-gray-700 font-bold underline">
           Zakończ bez zapisu

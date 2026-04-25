@@ -17,7 +17,7 @@ const myImages = [
   'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800&q=80',
 ];
 
-export default function Puzzle({ goBack }: { goBack: () => void }) {
+export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, onSaveScore: (g: string, t: string, n: number, tm: number | null) => void }) {
   // Stany gry
   const [level, setLevel] = useState<string | null>(null);
   const [tiles, setTiles] = useState<number[]>([]);
@@ -126,6 +126,12 @@ export default function Puzzle({ goBack }: { goBack: () => void }) {
           <p className="text-xl text-blue-800 mb-2">Ruchy: <span className="font-bold text-red-500 text-3xl block">{moves}</span></p>
           <p className="text-xl text-blue-800">Czas: <span className="font-bold text-blue-600">{timer} s</span></p>
         </div>
+        <button 
+            onClick={() => onSaveScore(`PUZZLE (${levels[level!].name.toUpperCase()})`, `${moves} RUCHÓW`, moves, timer)} 
+            className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 border-4 border-blue-900 font-extrabold py-3 px-8 rounded-full shadow-lg transform transition hover:-translate-y-1 text-xl"
+            >
+             Zapisz Wynik
+        </button>
         <button onClick={goBack} className="mt-4 bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-8 rounded-full shadow-lg transition">
           Koniec
         </button>

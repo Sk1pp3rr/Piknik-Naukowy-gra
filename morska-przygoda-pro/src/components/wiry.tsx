@@ -8,7 +8,7 @@ const A = { x: -2.5, y: -2.0 }, B = { x: 2.3, y: 2.0 };
 type Vortex = { id: number; x: number; y: number; strength: number; colorClass: string; hex: string; name: string };
 type Point = { x: number; y: number };
 
-export default function Wiry({ goBack }: { goBack: () => void }) {
+export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSaveScore: (g: string, t: string, n: number, tm: number | null) => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef<number | null>(null);
   
@@ -20,12 +20,11 @@ export default function Wiry({ goBack }: { goBack: () => void }) {
   });
 
   const [vortices, setVortices] = useState<Vortex[]>([
-    { id: 0, x: -1.4, y: 0.0, strength: 1, colorClass: 'text-blue-500 accent-blue-500', hex: '#3b82f6', name: 'Niebieski' },
+    { id: 0, x: -1.4, y: 0.0, strength: 0.7, colorClass: 'text-blue-500 accent-blue-500', hex: '#3b82f6', name: 'Niebieski' },
     { id: 1, x: 0.0, y: 1.4, strength: 1, colorClass: 'text-green-500 accent-green-500', hex: '#22c55e', name: 'Zielony' },
-    { id: 2, x: 1.4, y: -1.0, strength: 1, colorClass: 'text-orange-500 accent-orange-500', hex: '#f97316', name: 'Pomarańcz' }
+    { id: 2, x: 1.4, y: -1.0, strength: -1, colorClass: 'text-orange-500 accent-orange-500', hex: '#f97316', name: 'Pomarańcz' }
   ]);
   
-  // SEKRETNA BROŃ: Referencja do wirów. Pętla animacji będzie z niej czytać na żywo!
   const vorticesRef = useRef(vortices);
   useEffect(() => {
     vorticesRef.current = vortices;
@@ -224,8 +223,11 @@ export default function Wiry({ goBack }: { goBack: () => void }) {
           <p className="text-4xl text-red-500 font-bold mb-2">{finalScore.toFixed(1)} PKT</p>
           <p className="text-sm text-gray-400">(Im mniej punktów, tym krótsza i lepsza trasa!)</p>
         </div>
-        <button onClick={() => { setIsFinished(false); resetGame(); }} className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 border-4 border-blue-900 font-extrabold py-3 px-8 rounded-full shadow-lg transition text-xl mb-2">
-          Zapisz Wynik
+        <button 
+            onClick={() => onSaveScore("WIRY", `${finalScore.toFixed(1)} PKT`, finalScore, null)} 
+            className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 border-4 border-blue-900 font-extrabold py-3 px-8 rounded-full shadow-lg transition text-xl mb-2"
+        >
+            Zapisz Wynik
         </button>
         <button onClick={() => { setIsFinished(false); resetGame(); }} className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-6 rounded-full transition">
           Spróbuj wykręcić lepszy czas

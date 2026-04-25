@@ -2,3 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ========================================= */
+/* ANIMOWANE MINIMALISTYCZNE FALE W TLE      */
+/* ========================================= */
+
+.ocean {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 300px; /* ZMIANA: Sztywna wysokość. Fale są fizycznie wielkie! */
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* ZMIANA: Zmuszamy obrazek, by miał dokładnie 300px wysokości i 2000px długości */
+  background-size: 2000px 300px;
+  background-position: bottom;
+  background-repeat: repeat-x;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Fala 1 (Tło - najgłębsza, największe wychylenie krzywej) */
+.wave:nth-child(1) {
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2000 300'%3E%3Cpath d='M 0,100 Q 250,220 500,100 T 1000,100 T 1500,100 T 2000,100 L 2000,300 L 0,300 Z' fill='%23bae6fd' opacity='0.6'/%3E%3C/svg%3E");
+  animation: wave-move-left 25s linear infinite;
+}
+
+/* Fala 2 (Środek - płynie w prawo) */
+.wave:nth-child(2) {
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2000 300'%3E%3Cpath d='M 0,130 Q 250,30 500,130 T 1000,130 T 1500,130 T 2000,130 L 2000,300 L 0,300 Z' fill='%237dd3fc' opacity='0.4'/%3E%3C/svg%3E");
+  animation: wave-move-right 20s linear infinite;
+}
+
+/* Fala 3 (Pierwszy plan - najszybsza) */
+.wave:nth-child(3) {
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2000 300'%3E%3Cpath d='M 0,160 Q 250,280 500,160 T 1000,160 T 1500,160 T 2000,160 L 2000,300 L 0,300 Z' fill='%23e0f2fe' opacity='0.9'/%3E%3C/svg%3E");
+  animation: wave-move-left 15s linear infinite;
+}
+
+@keyframes wave-move-left {
+  0% { background-position-x: 0px; }
+  100% { background-position-x: -2000px; }
+}
+
+@keyframes wave-move-right {
+  0% { background-position-x: -2000px; }
+  100% { background-position-x: 0px; }
+}
