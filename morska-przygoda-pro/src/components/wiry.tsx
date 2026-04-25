@@ -33,6 +33,10 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
   const [isPlaying, setIsPlaying] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
+  
+  // NOWE STANY: Dystans na żywo i komunikaty błędów
+  const [liveDistance, setLiveDistance] = useState(0);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const toPixX = (x: number) => ((x + 3) / 6) * W;
   const toPixY = (y: number) => H - ((y + 3) / 6) * H;
@@ -53,7 +57,6 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
         let maxMag = -1;
         let domColor = "rgba(180, 180, 180, 0.2)"; 
 
-        // Używamy vorticesRef.current zamiast state, by mieć dane na żywo podczas gry
         vorticesRef.current.forEach(vt => {
           if (vt.strength === 0) return;
           let dx = gx - vt.x, dy = gy - vt.y;
@@ -97,7 +100,7 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
       }
     }
 
-    // 2. BAZA (A, B, Wiry)
+    // 2. BAZA
     ctx.beginPath(); ctx.arc(toPixX(B.x), toPixY(B.y), targetRadius * (W / 6), 0, Math.PI * 2);
     ctx.fillStyle = "rgba(128, 0, 128, 0.3)"; ctx.fill(); 
     ctx.fillStyle = "purple"; ctx.font = "bold 14px Arial"; ctx.fillText("B", toPixX(B.x) - 5, toPixY(B.y) + 5);
@@ -116,7 +119,7 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
       ctx.fillText(symbol, toPixX(vt.x) - 5, toPixY(vt.y) + 4);
     });
 
-    // 3. TRASA I CZĄSTECZKA
+    // 3. TRASA
     const { particle, traj } = gameRef.current;
     
     if (traj.length > 1) {
@@ -139,7 +142,6 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
     let p = gameRef.current.particle;
     let u = 0, v = 0;
 
-    // Pobieramy siłę wirów na żywo z referencji!
     vorticesRef.current.forEach(vt => {
       if (vt.strength === 0) return;
       let dx = p.x - vt.x, dy = p.y - vt.y;
@@ -161,6 +163,9 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
     gameRef.current.traj.push({ x: nx, y: ny });
 
     draw(); 
+    
+    // AKTUALIZACJA DYSTANSU NA ŻYWO!
+    setLiveDistance(gameRef.current.pathLength);
 
     const distToB = Math.sqrt(Math.pow(nx - B.x, 2) + Math.pow(ny - B.y, 2));
     if (distToB < targetRadius) {
@@ -171,11 +176,11 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
       return;
     }
 
+    // ZBYT DŁUGA TRASA - Aktywacja nakładki w UI
     if (gameRef.current.pathLength > 150) {
         gameRef.current.isRunning = false;
         setIsPlaying(false);
-        alert("Zbyt długa trasa! Cząsteczka zgubiła się w oceanie.");
-        resetGame();
+        setErrorMsg("Pływak zgubił się w wielkim oceanie! Ustaw odpowiednio siły prądów morskich i spróbuj wytyczyć krótszą trasę.");
         return;
     }
 
@@ -183,11 +188,16 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
   };
 
   useEffect(() => {
-    // Odśwież widok tylko gdy nie gramy (bo w trakcie gry odświeża pętla animate)
-    if (!isPlaying) draw();
-  }, [vortices]);
+    // Rysuje planszę, gdy zmieniamy suwaki przed startem
+    // setTimeout zapobiega błędowi "pustej planszy" - daje Reactowi czas na wyrenderowanie canvasu po resecie gry
+    if (!isPlaying && !isFinished) {
+      setTimeout(() => draw(), 10);
+    }
+  }, [vortices, isPlaying, isFinished]);
 
   const startGame = () => {
+    setErrorMsg(null); // Ukrywa błąd przy nowym starcie
+    setLiveDistance(0);
     gameRef.current = {
       particle: { x: A.x, y: A.y },
       traj: [],
@@ -201,6 +211,8 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
   };
 
   const resetGame = () => {
+    setErrorMsg(null);
+    setLiveDistance(0); // Zeruje licznik w UI po restarcie
     gameRef.current.isRunning = false;
     if (animRef.current) cancelAnimationFrame(animRef.current);
     gameRef.current.particle = { x: A.x, y: A.y };
@@ -216,18 +228,15 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
 
   if (isFinished) {
     return (
-      <div className="flex flex-col items-center gap-4 bg-blue-50 p-8 rounded-3xl border-4 border-blue-200 w-full">
+      <div className="flex flex-col items-center gap-4 p-8 w-full">
         <h2 className="text-4xl text-blue-900 font-bold mb-2">Cel Osiągnięty! 🎯</h2>
-        <div className="bg-white p-6 rounded-2xl shadow-inner text-center w-full max-w-sm mb-4">
+        <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-inner text-center w-full max-w-sm mb-4 border border-white">
           <p className="text-lg text-gray-500 mb-1">Długość przebytej trasy:</p>
           <p className="text-4xl text-red-500 font-bold mb-2">{finalScore.toFixed(1)} PKT</p>
           <p className="text-sm text-gray-400">(Im mniej punktów, tym krótsza i lepsza trasa!)</p>
         </div>
-        <button 
-            onClick={() => onSaveScore("WIRY", `${finalScore.toFixed(1)} PKT`, finalScore, null)} 
-            className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 border-4 border-blue-900 font-extrabold py-3 px-8 rounded-full shadow-lg transition text-xl mb-2"
-        >
-            Zapisz Wynik
+        <button onClick={() => onSaveScore("WIRY", `${finalScore.toFixed(1)} PKT`, finalScore, null)} className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 border-4 border-blue-900 font-extrabold py-3 px-8 rounded-full shadow-lg transition text-xl mb-2 hover:-translate-y-1">
+          Zapisz Wynik
         </button>
         <button onClick={() => { setIsFinished(false); resetGame(); }} className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-6 rounded-full transition">
           Spróbuj wykręcić lepszy czas
@@ -242,19 +251,31 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
   return (
     <div className="flex flex-col items-center w-full">
       <div className="flex justify-between items-center w-full mb-4 px-2">
-        <h2 className="text-2xl text-blue-900 font-bold">Morskie Wiry</h2>
-        <span className="bg-red-100 text-red-600 font-bold py-1 px-3 rounded-full border border-red-300">
-          Dystans: {gameRef.current.pathLength.toFixed(1)}
+        <h2 className="text-2xl text-blue-900 font-bold">Oceaniczne Prądy</h2>
+        <span className="bg-red-100 text-red-600 font-bold py-1 px-3 rounded-full border border-red-300 shadow-sm transition-all duration-75">
+          {/* Używamy stanu liveDistance, który reaguje na bieżąco */}
+          Dystans: {liveDistance.toFixed(1)}
         </span>
       </div>
 
       <div className="bg-sky-50 border-4 border-blue-900 rounded-xl overflow-hidden shadow-2xl relative">
         <canvas ref={canvasRef} width={W} height={H} className="block" />
+        
+        {/* NAKŁADKA Z BŁĘDEM (Pojawia się wewnątrz okna gry!) */}
+        {errorMsg && (
+          <div className="absolute inset-0 bg-red-900/90 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center z-10 animate-fadeIn">
+            <span className="text-5xl mb-4">⚠️</span>
+            <h3 className="text-2xl font-bold text-white mb-2">Misja Nieudana</h3>
+            <p className="text-red-100 mb-6">{errorMsg}</p>
+            <button onClick={resetGame} className="bg-white text-red-900 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-200 transition transform hover:scale-105">
+              Resetuj Planszę
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* SUWAKI - Odblokowane! */}
-      <div className="mt-6 bg-white p-4 rounded-2xl shadow-md border-2 border-gray-100 w-full max-w-[400px]">
-        <h3 className="text-center font-bold text-gray-600 mb-4 text-sm uppercase tracking-wider">Zarządzaj siłą wirów (-4 do 4)</h3>
+      <div className="mt-6 bg-white/80 backdrop-blur-sm p-4 rounded-2xl shadow-sm border border-white w-full max-w-[400px]">
+        <h3 className="text-center font-bold text-gray-600 mb-4 text-sm uppercase tracking-wider">Zarządzaj siłą prądów (-4 do 4)</h3>
         {vortices.map(vt => (
           <div key={vt.id} className="flex items-center gap-4 mb-3">
             <span className={`font-bold w-24 text-right text-sm ${vt.colorClass}`}>{vt.name}</span>
@@ -262,7 +283,6 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
               type="range" 
               min="-4" max="4" step="0.1" 
               value={vt.strength} 
-              // Usunięta właściwość disabled, dodano kursor pointer
               onChange={(e) => handleSliderChange(vt.id, parseFloat(e.target.value))}
               className={`flex-1 h-2 rounded-lg appearance-none bg-gray-200 outline-none cursor-pointer ${vt.colorClass}`}
             />
@@ -283,7 +303,7 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
         )}
       </div>
       
-      <button onClick={goBack} className="mt-6 text-gray-500 hover:text-gray-700 font-bold underline">
+      <button onClick={goBack} className="mt-6 text-gray-500 hover:text-gray-700 font-bold underline transition-colors">
         Wróć do Menu
       </button>
     </div>

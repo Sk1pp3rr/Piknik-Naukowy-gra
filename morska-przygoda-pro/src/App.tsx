@@ -77,6 +77,9 @@ function App() {
             <button onClick={() => setCurrentScreen('puzzle')} className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:-translate-y-1 text-lg w-64">🧩 Morskie Puzzle</button>
             <button onClick={() => setCurrentScreen('quiz')} className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:-translate-y-1 text-lg w-64">❓ Quiz Oceaniczny</button>
             <button onClick={() => setCurrentScreen('scoreboard')} className="mt-8 bg-yellow-400 hover:bg-yellow-300 text-blue-900 border-4 border-blue-900 font-extrabold py-3 px-8 rounded-full shadow-lg transform transition hover:-translate-y-1 text-xl">🏆 HALL OF FAME 🏆</button>
+            <h2 className="text-sm text-gray-600 mt-12 italic">
+              Pracownia Modelowania Procesów Fizycznych w Morzu i Atmosferze, Zakład Dynamiki Morza IOPAN
+            </h2>
           </div>
         );
 
@@ -142,7 +145,7 @@ function App() {
             
             <div className="text-center mt-12">
               <button onClick={() => setCurrentScreen('menu')} className="bg-transparent border-4 border-red-500 text-red-500 hover:bg-red-500 hover:text-black font-bold py-3 px-8 text-xl uppercase transition shadow-[0_0_15px_rgba(239,68,68,0.5)] animate-pulse">
-                WRÓC
+                WRÓĆ
               </button>
             </div>
           </div>

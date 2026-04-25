@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 
-// Konfiguracja poziomów
 type LevelConfig = {
   name: string;
   rows: number;
@@ -13,12 +12,16 @@ const levels: Record<string, LevelConfig> = {
   hard: { name: 'Trudny', rows: 6, cols: 7 },
 };
 
+// TWOJE LOKALNE ZDJĘCIA! 
+// Vite szuka ich w folderze: public/puzzle/
 const myImages = [
-  'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800&q=80',
+  '/puzzle/1.jpg',
+  '/puzzle/2.jpg',
+  '/puzzle/3.jpg',
+  // Możesz tu łatwo dodać kolejne, wpisując po przecinku np. '/puzzle/4.jpg'
 ];
 
 export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, onSaveScore: (g: string, t: string, n: number, tm: number | null) => void }) {
-  // Stany gry
   const [level, setLevel] = useState<string | null>(null);
   const [tiles, setTiles] = useState<number[]>([]);
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
@@ -27,14 +30,11 @@ export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, on
   const [moves, setMoves] = useState(0);
   const [imageUrl, setImageUrl] = useState('');
   
-  // Nowy stan: podgląd zdjęcia
   const [showPreview, setShowPreview] = useState(false);
   
-  // Czasomierz
   const [startTime, setStartTime] = useState(0);
   const [timer, setTimer] = useState(0);
 
-  // Stoper
   useEffect(() => {
     let interval: number;
     if (isPlaying && !isFinished) {
@@ -45,7 +45,6 @@ export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, on
     return () => clearInterval(interval);
   }, [isPlaying, isFinished, startTime]);
 
-  // Funkcja resetująca/inicjująca
   const initGame = (lvlKey: string) => {
     const config = levels[lvlKey];
     const totalTiles = config.rows * config.cols;
@@ -53,16 +52,16 @@ export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, on
     
     setLevel(lvlKey);
     setTiles(initialTiles);
+    // Losujemy jedno zdjęcie z Twojej lokalnej puli!
     setImageUrl(myImages[Math.floor(Math.random() * myImages.length)]);
     setIsPlaying(false);
     setIsFinished(false);
-    setShowPreview(false); // Reset podglądu
+    setShowPreview(false);
     setMoves(0);
     setTimer(0);
     setSelectedIdx(null);
   };
 
-  // Rozpoczęcie gry i tasowanie
   const startGame = () => {
     const shuffled = [...tiles];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -72,15 +71,13 @@ export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, on
     
     setTiles(shuffled);
     setIsPlaying(true);
-    setShowPreview(false); // Zamknij podgląd jeśli był otwarty przed startem
+    setShowPreview(false);
     setStartTime(Date.now());
     setMoves(0);
     setTimer(0);
   };
 
-  // Mechanika klikania
   const handleTileClick = (index: number) => {
-    // BLOKADA: Nie klikaj, jeśli nie grasz, wygrałeś, lub WŁĄCZONY JEST PODGLĄD
     if (!isPlaying || isFinished || showPreview) return;
 
     if (selectedIdx === null) {
@@ -92,7 +89,6 @@ export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, on
         setTiles(newTiles);
         setMoves(m => m + 1);
         
-        // Sprawdź wygraną
         const won = newTiles.every((val, i) => val === i);
         if (won) {
           setIsFinished(true);
@@ -103,59 +99,55 @@ export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, on
     }
   };
 
-  // --- WIDOK 1: MENU ---
   if (!level) {
     return (
       <div className="flex flex-col items-center gap-4 w-full">
         <h2 className="text-3xl text-blue-900 font-bold mb-6">Morskie Puzzle</h2>
-        <button onClick={() => initGame('easy')} className="bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-3 px-8 rounded-full w-80 shadow-md transition transform hover:scale-105">👶 Łatwy (3x4 elements)</button>
-        <button onClick={() => initGame('medium')} className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-full w-80 shadow-md transition transform hover:scale-105">🏖️ Średni (4x5 elements)</button>
-        <button onClick={() => initGame('hard')} className="bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 px-8 rounded-full w-80 shadow-md transition transform hover:scale-105">⚓ Trudny (6x7 elements)</button>
+        <button onClick={() => initGame('easy')} className="bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-3 px-8 rounded-full w-80 shadow-md transition transform hover:scale-105">👶 Łatwy (3x4 elementy)</button>
+        <button onClick={() => initGame('medium')} className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-full w-80 shadow-md transition transform hover:scale-105">🏖️ Średni (4x5 elementów)</button>
+        <button onClick={() => initGame('hard')} className="bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 px-8 rounded-full w-80 shadow-md transition transform hover:scale-105">⚓ Trudny (6x7 elementów)</button>
         <button onClick={goBack} className="mt-6 text-red-500 hover:text-red-400 font-bold underline">Wróć do Menu</button>
       </div>
     );
   }
 
-  // --- WIDOK 2: WYGRANA ---
   if (isFinished) {
     return (
-      <div className="flex flex-col items-center gap-4 bg-blue-50 p-8 rounded-3xl border-4 border-blue-200">
+      <div className="flex flex-col items-center gap-4 p-8 w-full">
         <h2 className="text-4xl text-blue-900 font-bold mb-2">Ułożone! 🎉</h2>
-        <div className="bg-white p-6 rounded-2xl shadow-inner text-center w-full max-w-sm mb-4">
+        <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-inner text-center w-full max-w-sm mb-4 border border-white">
           <p className="text-lg text-gray-500 mb-1">Poziom: <span className="font-bold text-blue-800 uppercase">{levels[level].name}</span></p>
           <p className="text-xl text-blue-800 mb-2">Ruchy: <span className="font-bold text-red-500 text-3xl block">{moves}</span></p>
           <p className="text-xl text-blue-800">Czas: <span className="font-bold text-blue-600">{timer} s</span></p>
         </div>
         <button 
-            onClick={() => onSaveScore(`PUZZLE (${levels[level!].name.toUpperCase()})`, `${moves} RUCHÓW`, moves, timer)} 
-            className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 border-4 border-blue-900 font-extrabold py-3 px-8 rounded-full shadow-lg transform transition hover:-translate-y-1 text-xl"
-            >
-             Zapisz Wynik
+          onClick={() => onSaveScore(`PUZZLE (${levels[level].name.toUpperCase()})`, `${moves} RUCHÓW`, moves, timer)} 
+          className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 border-4 border-blue-900 font-extrabold py-3 px-8 rounded-full shadow-lg transform transition hover:-translate-y-1 text-xl"
+        >
+          Zapisz Wynik
         </button>
-        <button onClick={goBack} className="mt-4 bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-8 rounded-full shadow-lg transition">
-          Koniec
+        <button onClick={goBack} className="mt-4 text-gray-500 hover:text-gray-700 font-bold underline transition-colors">
+          Wróć do Menu
         </button>
       </div>
     );
   }
 
-  // --- WIDOK 3: GRA ---
   const config = levels[level];
 
   return (
     <div className="flex flex-col items-center w-full relative">
       <div className="flex justify-between w-full mb-4 px-4 max-w-2xl">
-        <span className="text-xl text-red-500 font-bold tracking-wider">
+        <span className="text-xl text-red-500 font-bold tracking-wider bg-white/50 px-4 py-1 rounded-full shadow-sm">
           Ruchy: {moves}
         </span>
-        <span className="text-xl text-blue-600 font-bold tracking-wider font-mono">
+        <span className="text-xl text-blue-600 font-bold tracking-wider font-mono bg-white/50 px-4 py-1 rounded-full shadow-sm">
           Czas: {timer}s
         </span>
       </div>
 
-      {/* Kontener planszy - relative dla pozycjonowania podglądu */}
       <div 
-        className="grid gap-[2px] bg-blue-900 p-1 rounded-lg shadow-xl relative w-full max-w-[700px]"
+        className="grid gap-[2px] bg-blue-900/10 p-1 rounded-lg shadow-xl relative w-full max-w-[700px] border-4 border-white/40"
         style={{ 
           gridTemplateColumns: `repeat(${config.cols}, minmax(0, 1fr))`,
           aspectRatio: `${config.cols} / ${config.rows}` 
@@ -174,7 +166,7 @@ export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, on
             <div
               key={currentIdx}
               onClick={() => handleTileClick(currentIdx)}
-              className={`w-full h-full bg-no-repeat transition-all duration-200 border-2 ${isSelected ? 'border-red-500 scale-90 z-10 shadow-[0_0_15px_red]' : 'border-white/10'} ${isPlaying && !showPreview ? 'cursor-pointer hover:border-white/50' : 'cursor-default'}`}
+              className={`w-full h-full bg-no-repeat transition-all duration-200 border-2 ${isSelected ? 'border-red-500 scale-90 z-10 shadow-[0_0_15px_red]' : 'border-white/20'} ${isPlaying && !showPreview ? 'cursor-pointer hover:border-white/80' : 'cursor-default'}`}
               style={{
                 backgroundImage: `url('${imageUrl}')`,
                 backgroundSize: `${config.cols * 100}% ${config.rows * 100}%`,
@@ -184,19 +176,23 @@ export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, on
           );
         })}
 
-        {/* NAKŁADKA PODGLĄDU - Pojawia się W MIEJSCU PUZLI */}
+        {/* NAKŁADKA PODGLĄDU */}
         {showPreview && (
             <div className="absolute inset-0 bg-white/30 backdrop-blur-sm p-2 rounded-lg z-20 flex items-center justify-center animate-fadeIn">
                 <img 
                     src={imageUrl} 
                     alt="Podgląd" 
                     className="w-full h-full object-cover rounded border-4 border-white shadow-2xl"
+                    onError={(e) => {
+                      // Jeśli zdjęcie się nie załaduje, wyświetlamy błąd (pomaga to w diagnozie!)
+                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.parentElement!.innerHTML = '<div class="bg-red-100 text-red-600 p-4 rounded font-bold text-center">❌ Brak zdjęcia!<br/>Upewnij się, że plik istnieje w folderze public/puzzle/</div>';
+                    }}
                 />
             </div>
         )}
       </div>
 
-      {/* PASEK PRZYCISKÓW STERUJĄCYCH */}
       <div className="flex gap-4 items-center mt-8">
         {!isPlaying ? (
             <button onClick={startGame} className="bg-teal-500 hover:bg-teal-400 text-white font-bold py-4 px-10 rounded-full shadow-lg transition text-xl animate-pulse">
@@ -204,10 +200,9 @@ export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, on
             </button>
         ) : (
             <>
-                {/* PRZYCISK PODGLĄDU */}
                 <button 
                     onClick={() => setShowPreview(!showPreview)} 
-                    className={`${showPreview ? 'bg-orange-500 hover:bg-orange-600' : 'bg-gray-700 hover:bg-gray-800'} text-white font-semibold py-3 px-6 rounded-xl transition shadow flex items-center gap-2`}
+                    className={`${showPreview ? 'bg-orange-500 hover:bg-orange-400' : 'bg-blue-600 hover:bg-blue-500'} text-white font-semibold py-3 px-6 rounded-xl transition shadow flex items-center gap-2`}
                 >
                     {showPreview ? '🙈 Ukryj Podgląd' : '👁️ Pokaż Podgląd'}
                 </button>
