@@ -1,3 +1,54 @@
+# BABY (50)
+Co pływa po wodzie?|Statek,Samolot,Samochód,Rower|0|baby
+Jakiego koloru jest morze?|Niebieskie,Czerwone,Zielone,Żółte|0|baby
+Kto mieszka w muszli?|Ryba,Krab,Słoń,Ptak|1|baby
+Co daje fale na morzu?|Wiatr,Piłka,Drzewo,Kamień|0|baby
+Co możemy znaleźć na plaży?|Piasek,Śnieg,Kwiaty,Kamień|0|baby
+Kto mieszka w oceanie?|Ryby,Psy,Ptaki,Koty|0|baby
+Co można zbierać na plaży?|Muszle,Książki,Samochody,Klocki|0|baby
+Co unosi się na wodzie?|Drewniana deska,Kamień,Ziemniak,Krzesło|0|baby
+Co robi wiatr?|Wieje,Śpiewa,Świeci,Pływa|0|baby
+Pływak Argo wygląda jak:|Mała żółta boja,Samolot,Kot,Książka|0|baby
+
+Co pije ryba?|Wodę,Sok,Herbatę,Mleko|0|baby
+Czy ryby chodzą do szkoły?|Tak,Nie,Tylko w wakacje,Tylko w nocy|1|baby
+Co robi krab?|Chodzi bokiem,Lata,Pływa jak samolot,Śpiewa|0|baby
+Czy rekin nosi czapkę?|Tak,Nie,W zimie,Tylko w niedzielę|1|baby
+Co robi fala?|Pluska,Śpiewa,Gra w piłkę,Śpi|0|baby
+Czy morze ma kieszenie?|Tak,Nie,Tylko zimą,Tylko w nocy|1|baby
+Co robi mewa?|Lata,Pływa jak ryba,Jeździ rowerem,Śpi pod wodą|0|baby
+Czy ryba ma rower?|Tak,Nie,Ma hulajnogę,Tylko w wakacje|1|baby
+Co jest mokre?|Woda,Piasek,Słońce,Chmura|0|baby
+Czy piasek pływa?|Tak,Nie,Tylko czasem,Gdy chce|1|baby
+
+Co robi słońce nad morzem?|Świeci,Śpiewa,Pływa,Skacze|0|baby
+Czy fala może pogłaskać?|Tak,Nie,Tylko w bajce,Tylko w nocy|0|baby
+Co robi statek?|Pływa,Lata,Skacze,Śpiewa|0|baby
+Czy delfin szczeka?|Tak,Nie,Tylko w zimie,Tylko rano|1|baby
+Co robi wiatr nad morzem?|Wieje,Gotuje,Pisze,Siedzi|0|baby
+Czy ryba czyta książki?|Tak,Nie,Tylko bajki,Tylko nocą|1|baby
+Co robi fala gdy się śmieje?|Pluska,Gwiżdże,Pisze,Gotuje|0|baby
+Czy krab nosi buty?|Tak,Nie,Latem,Tylko do szkoły|1|baby
+Co robi morze?|Faluje,Śpiewa,Rysuje,Śpi|0|baby
+Czy woda jest mokra?|Tak,Nie,Czasem,Tylko zimą|0|baby
+
+Co robi żaglówka?|Pływa,Lata,Biega,Skacze|0|baby
+Czy ryba może latać?|Tak,Nie,Tylko nocą,Tylko zimą|1|baby
+Co robi fala gdy wieje wiatr?|Rośnie,Śpi,Znika,Śpiewa|0|baby
+Czy morze jest suche?|Tak,Nie,Tylko latem,Tylko nocą|1|baby
+Co robi boja?|Pływa,Lata,Śpiewa,Skacze|0|baby
+Czy mewa nurkuje?|Tak,Nie,Tylko nocą,Tylko zimą|0|baby
+Co robi plaża?|Leży,Pływa,Lata,Śpiewa|0|baby
+Czy słońce pływa?|Tak,Nie,Tylko zimą,Tylko nocą|1|baby
+Co robi ryba w wodzie?|Pływa,Biega,Lata,Śpiewa|0|baby
+Czy statek chodzi?|Tak,Nie,Tylko nocą,Tylko zimą|1|baby
+
+Co robi ocean?|Faluje,Śpi,Lata,Skacze|0|baby
+Czy piasek śpiewa?|Tak,Nie,Tylko nocą,Tylko zimą|1|baby
+Co robi fala przy brzegu?|Rozbija się,Śpi,Lata,Gotuje|0|baby
+Czy ryba ma skrzydła?|Tak,Nie,Tylko zimą,Tylko nocą|1|baby
+Co robi wiatr z wodą?|Tworzy fale,Gotuje ją,Zamraża,Śpiewa|0|baby
+Czy morze jest gorące?|Tak,Nie,Zawsze,Tylko nocą|1|baby
 Co pływa po wodzie?|Statek,Samolot,Samochód,Rower|0|seasy
 Jakiego koloru jest morze?|Niebieskie,Czerwone,Zielone,Żółte|0|seasy
 Kto mieszka w muszli?|Ryba,Krab,Słoń,Ptak|1|seasy

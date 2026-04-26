@@ -9,13 +9,30 @@ type Screen = 'menu' | 'wiry' | 'puzzle' | 'quiz' | 'scoreboard' | 'name-entry';
 type PendingScore = { gameName: string; scoreText: string; numericScore: number; timeValue: number | null; };
 type SavedScore = { name: string; scoreText: string; num: number; time: number | null; };
 
+const electronWindow = window as Window & {
+  process?: { type?: string };
+  require?: (module: string) => any;
+};
+const isElectron = typeof window !== 'undefined' && !!electronWindow.process?.type;
+const ipcRenderer = isElectron ? electronWindow.require?.('electron')?.ipcRenderer : null;
+
 function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('menu');
+  const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
   
   // Stany dla wyników
   const [pendingScore, setPendingScore] = useState<PendingScore | null>(null);
   const [initials, setInitials] = useState('');
   const [scores, setScores] = useState<Record<string, SavedScore[]>>({});
+
+  useEffect(() => {
+    if (ipcRenderer) {
+      ipcRenderer.on('open-admin-menu', () => {
+        setIsAdminMenuOpen(true);
+      });
+      return () => { ipcRenderer.removeAllListeners('open-admin-menu'); };
+    }
+  }, []);
 
   // Wczytywanie wyników z pamięci przeglądarki (localStorage) przy starcie
   useEffect(() => {
@@ -156,6 +173,36 @@ function App() {
   return (
     <div className="relative min-h-screen bg-slate-50 flex items-center justify-center p-4 font-sans overflow-hidden">
       
+      {/* MENU ADMINA (OVERLAY) */}
+      {isAdminMenuOpen && (
+        <div className="fixed inset-0 z-[999] bg-black/90 backdrop-blur-xl flex items-center justify-center p-6 animate-fadeIn">
+          <div className="bg-gray-900 border-4 border-red-600 p-12 rounded-3xl text-center max-w-md shadow-[0_0_50px_rgba(220,38,38,0.5)]">
+            <h2 className="text-4xl text-red-500 font-black mb-8 tracking-tighter uppercase">Tryb Administratora</h2>
+            <p className="text-gray-400 mb-10">Zakończyć pracę maszyny czy wrócić do prezentacji?</p>
+            <div className="flex flex-col gap-4">
+              <button 
+                onClick={() => { if(isElectron) window.close(); }} 
+                className="bg-red-600 hover:bg-red-500 text-white font-bold py-4 rounded-xl text-xl transition-all uppercase"
+              >
+                Wyłącz Aplikację
+              </button>
+              <button 
+                onClick={() => { if(isElectron) ipcRenderer.send('toggle-fullscreen'); }} 
+                className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl text-xl transition-all uppercase"
+              >
+                Zwiń / Rozwiń Ekran
+              </button>
+              <button 
+                onClick={() => setIsAdminMenuOpen(false)} 
+                className="bg-transparent border-2 border-gray-600 text-gray-400 hover:text-white hover:border-white py-3 rounded-xl transition-all"
+              >
+                Wróć do gry
+              </button>
+            </div>
+          </div>
+        </div>
+      )} 
+
       {/* Kontener z naszymi TRZEMA falami */}
       <div className="ocean">
         <div className="wave"></div>

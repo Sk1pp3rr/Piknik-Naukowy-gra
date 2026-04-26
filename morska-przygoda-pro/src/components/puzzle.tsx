@@ -15,10 +15,15 @@ const levels: Record<string, LevelConfig> = {
 // TWOJE LOKALNE ZDJĘCIA! 
 // Vite szuka ich w folderze: public/puzzle/
 const myImages = [
-  '/puzzle/1.jpg',
-  '/puzzle/2.jpg',
-  '/puzzle/3.jpg',
-  // Możesz tu łatwo dodać kolejne, wpisując po przecinku np. '/puzzle/4.jpg'
+  './puzzle/1.jpg',
+  './puzzle/2.jpg',
+  './puzzle/3.jpg',
+  './puzzle/4.jpg',
+  './puzzle/5.jpg',
+  './puzzle/6.jpg',
+  './puzzle/7.jpg',
+  './puzzle/8.jpg',
+  './puzzle/9.jpg'
 ];
 
 export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, onSaveScore: (g: string, t: string, n: number, tm: number | null) => void }) {
@@ -52,10 +57,9 @@ export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, on
     
     setLevel(lvlKey);
     setTiles(initialTiles);
-    // Losujemy jedno zdjęcie z Twojej lokalnej puli!
     setImageUrl(myImages[Math.floor(Math.random() * myImages.length)]);
     setIsPlaying(false);
-    setIsFinished(false);
+    isFinished && setIsFinished(false);
     setShowPreview(false);
     setMoves(0);
     setTimer(0);
@@ -113,22 +117,47 @@ export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, on
 
   if (isFinished) {
     return (
-      <div className="flex flex-col items-center gap-4 p-8 w-full">
-        <h2 className="text-4xl text-blue-900 font-bold mb-2">Ułożone! 🎉</h2>
-        <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-inner text-center w-full max-w-sm mb-4 border border-white">
-          <p className="text-lg text-gray-500 mb-1">Poziom: <span className="font-bold text-blue-800 uppercase">{levels[level].name}</span></p>
-          <p className="text-xl text-blue-800 mb-2">Ruchy: <span className="font-bold text-red-500 text-3xl block">{moves}</span></p>
-          <p className="text-xl text-blue-800">Czas: <span className="font-bold text-blue-600">{timer} s</span></p>
+      <div className="flex flex-col items-center gap-4 p-4 w-full animate-fadeIn">
+        <h2 className="text-4xl text-blue-900 font-black mb-2 uppercase tracking-tighter">Zadanie Wykonane! 🎉</h2>
+        
+        {/* WYŚWIETLANIE UŁOŻONEGO OBRAZKA */}
+        <div className="relative mb-6 group">
+          <div className="absolute -inset-2 bg-gradient-to-r from-green-400 to-blue-500 rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-1000"></div>
+          <div className="relative bg-white p-2 rounded-xl shadow-2xl border-4 border-white">
+            <img 
+              src={imageUrl} 
+              alt="Ułożony obraz" 
+              className="max-h-[350px] rounded-lg shadow-inner object-contain"
+            />
+          </div>
         </div>
-        <button 
-          onClick={() => onSaveScore(`PUZZLE (${levels[level].name.toUpperCase()})`, `${moves} RUCHÓW`, moves, timer)} 
-          className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 border-4 border-blue-900 font-extrabold py-3 px-8 rounded-full shadow-lg transform transition hover:-translate-y-1 text-xl"
-        >
-          Zapisz Wynik
-        </button>
-        <button onClick={goBack} className="mt-4 text-gray-500 hover:text-gray-700 font-bold underline transition-colors">
-          Wróć do Menu
-        </button>
+
+        <div className="bg-white/80 backdrop-blur-sm p-5 rounded-2xl shadow-inner text-center w-full max-w-sm mb-4 border border-white">
+          <div className="flex justify-around mb-2">
+            <div>
+              <p className="text-xs text-gray-400 uppercase font-bold">Ruchy</p>
+              <p className="text-3xl text-red-500 font-black">{moves}</p>
+            </div>
+            <div className="border-l border-gray-200"></div>
+            <div>
+              <p className="text-xs text-gray-400 uppercase font-bold">Czas</p>
+              <p className="text-3xl text-blue-600 font-black">{timer}s</p>
+            </div>
+          </div>
+          <p className="text-sm text-gray-400 italic mt-2 border-t pt-2">Poziom: {levels[level!].name}</p>
+        </div>
+
+        <div className="flex flex-col gap-3 w-64">
+          <button 
+            onClick={() => onSaveScore(`PUZZLE (${levels[level!].name.toUpperCase()})`, `${moves} RUCHÓW`, moves, timer)} 
+            className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 border-b-4 border-yellow-600 font-black py-4 px-8 rounded-full shadow-lg transform transition hover:-translate-y-1 text-xl uppercase"
+          >
+            Zapisz Wynik
+          </button>
+          <button onClick={goBack} className="text-gray-500 hover:text-gray-800 font-bold underline transition-colors">
+            Menu Główne
+          </button>
+        </div>
       </div>
     );
   }
@@ -147,7 +176,7 @@ export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, on
       </div>
 
       <div 
-        className="grid gap-[2px] bg-blue-900/10 p-1 rounded-lg shadow-xl relative w-full max-w-[700px] border-4 border-white/40"
+        className="grid gap-[2px] bg-blue-950 p-1 rounded-lg shadow-xl relative w-full max-w-[700px] border-4 border-white/40"
         style={{ 
           gridTemplateColumns: `repeat(${config.cols}, minmax(0, 1fr))`,
           aspectRatio: `${config.cols} / ${config.rows}` 
@@ -161,12 +190,18 @@ export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, on
           const posY = (correctRow / (config.rows - 1)) * 100;
 
           const isSelected = selectedIdx === currentIdx;
+          // ZMIANA: Sprawdzamy czy kafelek leży na swoim miejscu docelowym (Hint)
+          const isCorrectPos = isPlaying && correctVal === currentIdx;
 
           return (
             <div
               key={currentIdx}
               onClick={() => handleTileClick(currentIdx)}
-              className={`w-full h-full bg-no-repeat transition-all duration-200 border-2 ${isSelected ? 'border-red-500 scale-90 z-10 shadow-[0_0_15px_red]' : 'border-white/20'} ${isPlaying && !showPreview ? 'cursor-pointer hover:border-white/80' : 'cursor-default'}`}
+              // ZMIANA: Dynamiczne klasy dla podświetleń i zaznaczeń
+              className={`w-full h-full bg-no-repeat transition-all duration-200 border-2 
+                ${isSelected ? 'border-red-500 scale-90 z-10 shadow-[0_0_15px_red]' : 'border-white/20'} 
+                ${isCorrectPos && !isSelected ? 'border-green-400 shadow-[0_0_10px_#4ade80] animate-pulseSlow' : ''} 
+                ${isPlaying && !showPreview ? 'cursor-pointer hover:border-white/80' : 'cursor-default'}`}
               style={{
                 backgroundImage: `url('${imageUrl}')`,
                 backgroundSize: `${config.cols * 100}% ${config.rows * 100}%`,
@@ -176,19 +211,42 @@ export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, on
           );
         })}
 
-        {/* NAKŁADKA PODGLĄDU */}
+        {/* NAKŁADKA PODGLĄDU - TERAZ JEST TO IDENTYCZNA SIATKA (Solved Grid) 1:1 */}
         {showPreview && (
-            <div className="absolute inset-0 bg-white/30 backdrop-blur-sm p-2 rounded-lg z-20 flex items-center justify-center animate-fadeIn">
-                <img 
-                    src={imageUrl} 
-                    alt="Podgląd" 
-                    className="w-full h-full object-cover rounded border-4 border-white shadow-2xl"
-                    onError={(e) => {
-                      // Jeśli zdjęcie się nie załaduje, wyświetlamy błąd (pomaga to w diagnozie!)
-                      e.currentTarget.style.display = 'none';
-                      e.currentTarget.parentElement!.innerHTML = '<div class="bg-red-100 text-red-600 p-4 rounded font-bold text-center">❌ Brak zdjęcia!<br/>Upewnij się, że plik istnieje w folderze public/puzzle/</div>';
-                    }}
-                />
+            <div className="absolute inset-0 bg-blue-950 p-1 rounded-lg z-20 animate-fadeIn">
+                <div 
+                  className="grid gap-[2px] w-full h-full"
+                  style={{ 
+                    gridTemplateColumns: `repeat(${config.cols}, minmax(0, 1fr))`,
+                    aspectRatio: `${config.cols} / ${config.rows}` 
+                  }}
+                >
+                  {/* Generujemy siatkę "ułożoną" */}
+                  {Array.from({ length: config.rows * config.cols }).map((_, i) => {
+                    const correctVal = i; // Tu wartość zawsze równa się indeksowi
+                    const correctRow = Math.floor(correctVal / config.cols);
+                    const correctCol = correctVal % config.cols;
+                    
+                    const posX = (correctCol / (config.cols - 1)) * 100;
+                    const posY = (correctRow / (config.rows - 1)) * 100;
+
+                    return (
+                      <div
+                        key={`prev-${i}`}
+                        className="w-full h-full bg-no-repeat border border-white/20"
+                        style={{
+                          backgroundImage: `url('${imageUrl}')`,
+                          backgroundSize: `${config.cols * 100}% ${config.rows * 100}%`,
+                          backgroundPosition: `${posX}% ${posY}%`
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+                {/* Dyskretny napis informujący */}
+                <div className="absolute inset-x-0 bottom-2 text-center z-30">
+                  <span className="bg-white/80 text-blue-950 font-bold px-4 py-1 rounded-full shadow text-sm uppercase tracking-wider">Podgląd Rozwiązania</span>
+                </div>
             </div>
         )}
       </div>
@@ -202,9 +260,10 @@ export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, on
             <>
                 <button 
                     onClick={() => setShowPreview(!showPreview)} 
-                    className={`${showPreview ? 'bg-orange-500 hover:bg-orange-400' : 'bg-blue-600 hover:bg-blue-500'} text-white font-semibold py-3 px-6 rounded-xl transition shadow flex items-center gap-2`}
+                    // ZMIANA: Neonowy zielony styl przycisku hintów
+                    className={`${showPreview ? 'bg-orange-500 hover:bg-orange-400' : 'bg-green-600 hover:bg-green-500'} text-white font-semibold py-3 px-6 rounded-xl transition shadow flex items-center gap-2 shadow-[0_0_15px_#22c55e33]`}
                 >
-                    {showPreview ? '🙈 Ukryj Podgląd' : '👁️ Pokaż Podgląd'}
+                    {showPreview ? 'Ukryj Podgląd' : 'Pokaż Wzór'}
                 </button>
 
                 <button onClick={() => setLevel(null)} className="text-red-400 hover:text-red-600 font-bold underline transition-colors">

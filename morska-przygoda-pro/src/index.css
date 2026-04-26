@@ -57,3 +57,13 @@
   0% { background-position-x: -2000px; }
   100% { background-position-x: 0px; }
 }
+
+/* Animacje dla Puzzli */
+@keyframes pulseSlow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.animate-pulseSlow {
+  animation: pulseSlow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
