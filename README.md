@@ -1,94 +1,99 @@
-# Bałtycka Akademia Odkrywców
+# 🌊 Morska Przygoda Pro
 
-Interaktywna aplikacja webowa z grami edukacyjnymi o tematyce morskiej. Projekt łączy naukę fizyki morza (wiry), logiczne myślenie (puzzle) oraz wiedzę ogólną (quiz).
-
-## Struktura plików
-
-Projekt został podzielony na moduły i foldery, aby kod był czysty i łatwy w edycji:
-
-    /Piknik-Naukowy-gra
-    ├── start.exe              # Plik startowy (uruchamia lokalny serwer i grę)
-    ├── serwer.py              # Skrypt bazowy serwera
-    ├── index.html             # Główny szkielet aplikacji
-    ├── style.css              # Wygląd i motyw graficzny
-    ├── quiz.txt               # Baza pytań do quizu (łatwa edycja)
-    ├── README.md              # Instrukcja projektu
-    ├── skrypt/                # Folder z logiką gier
-    │   ├── main.js            # Rdzeń, nawigacja i system wyników (Arcade)
-    │   ├── wiry.js            # Logika fizyki prądów morskich
-    │   ├── puzzle.js          # Logika tasowania i układania puzzli
-    │   └── quiz.js            # Logika quizu
-    └── assets/
-        └── images/            # Tu wrzucaj swoje zdjęcia do puzzli
-            ├── puzzle1.jpg
-            └── puzzle2.jpg
-            └── ...
-
-
-## Jak to uruchomić?
-
-Masz do wyboru trzy sposoby uruchomienia gry, w zależności od tego, do czego jej potrzebujesz:
-
-### Sposób 1: Dla graczy (Zalecany - "Złoty Środek")
-Kliknij dwukrotnie w plik **`start.exe`** (lub ten, który wygenerowałeś). W tle uruchomi się lekki serwer, a gra automatycznie otworzy się w Twojej domyślnej przeglądarce. Pobierze wszystkie zdjęcia i pytania z plików.
-
-### Sposób 2: Do edycji
-Otwórz folder projektu w edytorze (np. Visual Studio Code) i użyj rozszerzenia **Live Server** na pliku `index.html`. Idealne do testowania zmian w kodzie na żywo.
-
-### Sposób 3: Awaryjny (Bez serwera)
-Możesz po prostu kliknąć dwukrotnie w `index.html`. Gra się włączy, ale nie załaduje `quiz.txt`. Gra załaduje wtedy wbudowane w kod pytania awaryjne(słaba opcja bardzo) oraz domyślne zdjęcia. Zawsze działa!
+Interaktywna aplikacja desktopowa (typu Kiosk) z grami edukacyjnymi o tematyce morskiej. Projekt łączy naukę fizyki morza (wiry), logiczne myślenie (puzzle) oraz wiedzę ogólną (quiz). Aplikacja jest zbudowana w technologii React i opakowana w Electron, co czyni ją odporną na przypadkowe zamknięcia podczas pikników naukowych.
 
 ---
 
-## Konfiguracja i modyfikacje
+## 📂 Struktura plików
+
+Projekt został podzielony na moduły, aby kod był czysty i łatwy w edycji:
+
+    /morska-przygoda-pro
+    ├── electron.cjs           # Plik startowy aplikacji desktopowej (Electron - blokady klawiszy)
+    ├── package.json           # Konfiguracja projektu i skrypty startowe
+    ├── public/                # Folder na pliki statyczne (czytane prosto z dysku)
+    │   ├── quiz.txt           # Baza pytań do quizu (łatwa edycja w notatniku)
+    │   └── puzzle/            # Tu wrzucaj swoje zdjęcia do puzzli
+    │       ├── 1.jpg
+    │       ├── 2.jpg
+    │       └── 3.jpg
+    └── src/                   # Główny kod gry (React)
+        ├── App.tsx            # Menu główne, Hall of Fame, system wyników i nakładka Admina
+        ├── index.css          # Style CSS i animacje
+        └── components/        # Logika poszczególnych gier
+            ├── Wiry.tsx       # Fizyka prądów morskich
+            ├── Puzzle.tsx     # Tasowanie i inteligentne kadrowanie zdjęć
+            └── Quiz.tsx       # Silnik quizu i neonowe podświetlenia
+
+---
+
+## 🚀 Jak to uruchomić?
+
+Masz do wyboru trzy sposoby, w zależności od tego, co chcesz osiągnąć:
+
+### Sposób 1: Złoty standard (Tryb Arcade - Pełny ekran)
+Aby przetestować grę dokładnie tak, jak będzie działać na automacie (pełny ekran, blokady klawiszy):
+1. Otwórz terminal (konsolę) w folderze projektu.
+2. Wpisz: `npm run build` (zbuduje najnowszą wersję).
+3. Wpisz: `npm run electron:start` (uruchomi okno gry).
+
+### Sposób 2: Szybki podgląd zmian (Tryb Webowy)
+Jeśli edytujesz kod i chcesz od razu widzieć zmiany w przeglądarce:
+Wpisz w terminalu: `npm run dev`
+
+### Sposób 3: Odpalenie gotowego stanowiska (Dla graczy)
+Po skompilowaniu projektu do pliku `.exe` (szczegóły niżej), wystarczy dwukrotnie kliknąć instalator / plik gry. Gra od razu uruchomi się w trybie automatu.
+
+---
+
+## ⚙️ Konfiguracja i modyfikacje
 
 ### 1. Jak dodać własne zdjęcia do Puzzli?
-1. Wklej swoje zdjęcia do folderu `assets/images/` (zalecane proporcje to 4:3).
-2. Otwórz plik **`puzzle.js`** w notatniku lub edytorze kodu.
-3. Znajdź listę `myImages` (na samej górze pliku) i dopisz swoje zdjęcia:
-   ```javascript
-   const myImages = [
-       'assets/images/puzzle1.jpg',
-       'assets/images/moj_nowy_statek.jpg'
-   ];
-(bazowo są tam 3 nazwy puzzle1.jpg, puzzle2.jpg, puzzle3.jpg, jeżeli nie chce się nic tam w kodzie zmieniać to wystarczy wrzucić do assets/iamges dokładnie tak nazwane 3 pliki i też będzie gicior)
+1. Wklej swoje zdjęcia (w formacie `.jpg`) do folderu `public/puzzle/`.
+2. Zmień ich nazwy na np. `1.jpg`, `2.jpg`, `3.jpg`.
+3. Jeśli zmienisz nazwy lub dodasz więcej plików (np. `4.jpg`), otwórz plik **`src/components/Puzzle.tsx`** i dopisz je do listy `myImages` na samej górze kodu.
+*(Gra sama sprawdzi, czy zdjęcie jest pionowe czy poziome i odpowiednio obróci siatkę kafelków!)*
+
 ### 2. Jak edytować pytania w Quizie?
-Edytuj plik quiz.txt. Każde pytanie to jedna linijka. Oddzielaj elementy pionową kreską |.
-Format: Pytanie | Odp1,Odp2,Odp3,Odp4 | Numer_Poprawnej (od zera!) | Poziom_trudnosci
-Przykład: Co pływa po wodzie? | Statek,Samochod,Rower,Ptak | 0 | baby
+Edytuj plik `public/quiz.txt`. Każde pytanie to jedna linijka. Oddzielaj elementy pionową kreską `|`.
+Format: `Pytanie | Odp1, Odp2, Odp3, Odp4 | Numer_Poprawnej (od zera!) | Poziom_trudnosci`
+Przykład: `Co pływa po wodzie? | Statek, Samochód, Rower, Ptak | 0 | baby`
 
 ### 3. Tabela Wyników (Hall of Fame)
-Wyniki są zapisywane w pamięci przeglądarki (localStorage). System sam je sortuje:
+Wyniki są zapisywane i sortowane w pełni automatycznie:
+- **Quiz:** Najpierw wysoki wynik (%), potem najkrótszy czas.
+- **Puzzle:** Najpierw najkrótszy czas, potem najmniej ruchów.
+- **Wiry:** Najkrótsza trasa (najmniej punktów dystansu).
 
-Quiz: Najpierw wysoki wynik (%), potem najkrótszy czas.
+---
 
-Puzzle: Najpierw najkrótszy czas, potem najmniej ruchów.
+## 🔑 Tryb Administratora i Bezpieczeństwo
 
-Wiry: Najkrótsza trasa (najmniej punktów dystansu).
+Aby nikt przypadkiem nie wyłączył gry na stoisku, **skróty takie jak `Alt+F4` oraz `F11` są całkowicie zablokowane**.
 
-### 4. Jak zresetować / wyczyścić wyniki (Hall of Fame)?
-Ponieważ wyniki zapisują się na stałe w pamięci przeglądarki, "zwykłe" odświeżenie strony ich nie usunie. Aby wyczyścić tabelę, wykonaj te kroki:
+Aby wyjść z gry lub zmniejszyć okno, musisz użyć ukrytego skrótu:
+**Wciśnij jednocześnie: `Ctrl + Shift + L`**
+Spowoduje to wysunięcie Menu Administratora, z którego możesz bezpiecznie wyłączyć aplikację lub zwinąć pełny ekran.
 
-**Szybki reset przez Konsolę (Zalecane):**
-1. Otwórz grę w przeglądarce.
-2. Wciśnij klawisz **F12** (lub kliknij Prawym Przyciskiem Myszy -> *Zbadaj*), aby otworzyć Narzędzia Deweloperskie.
-3. Przejdź do zakładki **Console** (Konsola).
-4. Wpisz poniższą komendę i wciśnij Enter:
-   `localStorage.removeItem('morskieScoresArcade');`
-5. Odśwież stronę (klawisz **F5**). Tabela wyników będzie znowu pusta!
+### Jak zresetować tabele wyników na czysto?
+Wyniki w wersji z Electronem zapisują się w plikach systemowych Windowsa. Aby je wyczyścić przed nowym dniem pikniku:
+1. Wciśnij na klawiaturze `Win + R`.
+2. Wpisz `%APPDATA%` i wciśnij Enter.
+3. Wejdź do folderu `morska-przygoda-pro` i usuń folder **`Local Storage`**.
+4. Przy następnym uruchomieniu gry, tabele będą puste!
 
-*(Alternatywnie możesz po prostu wyczyścić "Dane witryn i pliki cookie" w ustawieniach historii przeglądarki).*
+---
 
-## Kompliacja do exe
-Jeśli edytowałeś plik start_gra.py i chcesz wygenerować nowy plik wykonywalny:
+## 📦 Kompilacja do gotowego pliku .exe
 
-Upewnij się, że masz Pythona i bibliotekę PyInstaller (pip install pyinstaller).
+Kiedy gra jest w 100% gotowa, możesz spakować ją do jednego pliku instalacyjnego `.exe`, który bez problemu przeniesiesz na pendrive na dowolnego laptopa.
 
-Otwórz konsolę w folderze z grą i wpisz:
-python -m pyinstaller --onefile -n start serwer.py
-(lub użyj własnej ikonki dodając flagę -i ikona.ico)
+1. Otwórz terminal w folderze projektu.
+2. Wpisz komendę:
+   `npm run electron:build`
+3. Poczekaj kilka minut. Gotowy instalator pojawi się w nowo utworzonym folderze **`release/`**.
 
-Gotowy plik znajdziesz w folderze dist. (a żeby działało to ma być tak jak w **Struktura Plików**)
+---
 
-## Licencja
-Projekt udostępniany na licencji **MIT**. Możesz go dowolnie modyfikować i udostępniać dalej, po prostu baw się dobrze i ucz innych!
+## 📜 Licencja
+Projekt udostępniany na licencji **MIT**. Pracownia Modelowania Procesów Fizycznych w Morzu i Atmosferze, Zakład Dynamiki Morza IOPAN. Baw się dobrze i ucz innych!
