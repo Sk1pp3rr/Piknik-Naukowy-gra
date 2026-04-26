@@ -1,216 +1,232 @@
 import { useState, useEffect } from 'react';
 
-type LevelConfig = {
-  name: string;
-  rows: number;
-  cols: number;
+// Typujemy nasze dane
+type Question = {
+  q: string;
+  a: string[];
+  c: number;
+  level: string;
 };
 
-const levels: Record<string, LevelConfig> = {
-  easy: { name: 'Łatwy', rows: 3, cols: 4 },
-  medium: { name: 'Średni', rows: 4, cols: 5 },
-  hard: { name: 'Trudny', rows: 6, cols: 7 },
-};
+const numOfQuestions = 10; // Ilość pytań na jedną grę
 
-// TWOJE LOKALNE ZDJĘCIA! 
-// Vite szuka ich w folderze: public/puzzle/
-const myImages = [
-  './puzzle/1.jpg',
-  './puzzle/2.jpg!d',
-  './puzzle/3.jpg',
+const fallbackQuestions: Question[] = [
+  { level: "baby", q: "Co pływa po wodzie? (Awaryjne)", a: ["Statek", "Samolot", "Samochód", "Rower"], c: 0 },
+  { level: "easy", q: "Fale morskie powstają głównie na skutek: (Awaryjne)", a: ["pływów", "wiatru", "prądów", "opadów"], c: 1 },
+  { level: "medium", q: "Co to jest cofka? (Awaryjne)", a: ["gwałtowny odpływ wody", "podniesienie poziomu przy brzegu", "spadek ciśnienia", "prąd"], c: 1 },
+  { level: "hard", q: "Pływaki Argo w ciężkich warunkach: (Awaryjne)", a: ["nie działają", "pływają i rejestrują dane", "toną", "zmieniają kierunek wiatru"], c: 1 }
 ];
 
-export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, onSaveScore: (g: string, t: string, n: number, tm: number | null) => void }) {
-  const [level, setLevel] = useState<string | null>(null);
-  const [tiles, setTiles] = useState<number[]>([]);
-  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+export default function Quiz({ goBack, onSaveScore }: { goBack: () => void, onSaveScore: (g: string, t: string, n: number, tm: number | null) => void }) {
+  const [selectedLevel, setSelectedLevel] = useState<string | null>(null);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [score, setScore] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
-  const [moves, setMoves] = useState(0);
-  const [imageUrl, setImageUrl] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [debugMessage, setDebugMessage] = useState<string>('');
   
-  const [showPreview, setShowPreview] = useState(false);
-  
-  const [startTime, setStartTime] = useState(0);
-  const [timer, setTimer] = useState(0);
+  // Stany do obsługi neonowego cooldownu
+  const [isRevealing, setIsRevealing] = useState(false);
+  const [selectedAnswerIdx, setSelectedAnswerIdx] = useState<number | null>(null);
+
+  const [startTime, setStartTime] = useState<number>(0);
+  const [timeTaken, setTimeTaken] = useState<number>(0);
 
   useEffect(() => {
-    let interval: number;
-    if (isPlaying && !isFinished) {
-      interval = window.setInterval(() => {
-        setTimer(Math.floor((Date.now() - startTime) / 1000));
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [isPlaying, isFinished, startTime]);
+    if (!selectedLevel) return;
 
-  const initGame = (lvlKey: string) => {
-    const config = levels[lvlKey];
-    const totalTiles = config.rows * config.cols;
-    const initialTiles = Array.from({ length: totalTiles }, (_, i) => i);
-    
-    setLevel(lvlKey);
-    setTiles(initialTiles);
-    setImageUrl(myImages[Math.floor(Math.random() * myImages.length)]);
-    setIsPlaying(false);
-    setIsFinished(false);
-    setShowPreview(false);
-    setMoves(0);
-    setTimer(0);
-    setSelectedIdx(null);
-  };
+    setLoading(true);
+    setDebugMessage('Szukam pliku w folderze public (./quiz.txt)...');
 
-  const startGame = () => {
-    const shuffled = [...tiles];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    
-    setTiles(shuffled);
-    setIsPlaying(true);
-    setShowPreview(false);
-    setStartTime(Date.now());
-    setMoves(0);
-    setTimer(0);
-  };
+    // Używamy ścieżki z kropką (./) dla poprawności w Electronie!
+    fetch('./quiz.txt?t=' + Date.now())
+      .then(res => {
+        if (!res.ok) throw new Error(`Błąd serwera: ${res.status}. Pliku nie ma w folderze głównym!`);
+        return res.text();
+      })
+      .then(text => {
+        setDebugMessage('Plik wczytany! Analizuję treść...');
+        const lines = text.split('\n').filter(l => l.trim().length > 0);
+        const loaded: Question[] = [];
 
-  const handleTileClick = (index: number) => {
-    if (!isPlaying || isFinished || showPreview) return;
+        lines.forEach(line => {
+          const parts = line.split('|');
+          if (parts.length >= 4) {
+            loaded.push({
+              q: parts[0].trim(),
+              a: parts[1].split(',').map(ans => ans.trim()),
+              c: parseInt(parts[2].trim()),
+              level: parts[3].trim().replace(/\r/g, '').toLowerCase()
+            });
+          }
+        });
 
-    if (selectedIdx === null) {
-      setSelectedIdx(index);
-    } else {
-      if (selectedIdx !== index) {
-        const newTiles = [...tiles];
-        [newTiles[selectedIdx], newTiles[index]] = [newTiles[index], newTiles[selectedIdx]];
-        setTiles(newTiles);
-        setMoves(m => m + 1);
+        let pool = loaded.filter(q => q.level === selectedLevel);
         
-        const won = newTiles.every((val, i) => val === i);
-        if (won) {
-          setIsFinished(true);
-          setIsPlaying(false);
+        if (pool.length === 0) {
+          setDebugMessage(`Plik jest, ale brak pytań dla poziomu: ${selectedLevel}. Używam awaryjnych.`);
+          pool = fallbackQuestions.filter(q => q.level === selectedLevel);
         }
-      }
-      setSelectedIdx(null);
+        if (pool.length === 0) pool = fallbackQuestions;
+
+        setQuestions(pool.sort(() => 0.5 - Math.random()).slice(0, numOfQuestions));
+        setStartTime(Date.now());
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setDebugMessage(`❌ BŁĄD: ${err.message}`);
+        
+        let pool = fallbackQuestions.filter(q => q.level === selectedLevel);
+        if (pool.length === 0) pool = fallbackQuestions;
+        
+        setQuestions(pool.sort(() => 0.5 - Math.random()).slice(0, numOfQuestions));
+        setStartTime(Date.now());
+        setTimeout(() => setLoading(false), 3000); 
+      });
+  }, [selectedLevel]);
+
+  const handleAnswer = (index: number) => {
+    // Blokujemy możliwość klikania innych odpowiedzi w trakcie pauzy
+    if (isRevealing) return;
+
+    // Zapisujemy, co kliknął gracz i włączamy tryb ujawniania
+    setSelectedAnswerIdx(index);
+    setIsRevealing(true);
+
+    const isCorrect = index === questions[currentIndex].c;
+    if (isCorrect) {
+      setScore(prev => prev + 1);
     }
+
+    // Ustawiamy timer na 4 sekundy (4000 ms), zanim przejdziemy dalej
+    setTimeout(() => {
+      if (currentIndex + 1 < questions.length) {
+        setCurrentIndex(prev => prev + 1);
+      } else {
+        setTimeTaken(Math.floor((Date.now() - startTime) / 1000));
+        setIsFinished(true);
+      }
+      
+      // Resetujemy stany przed nowym pytaniem
+      setIsRevealing(false);
+      setSelectedAnswerIdx(null);
+    }, 4000);
   };
 
-  if (!level) {
+  const getButtonClass = (index: number) => {
+    const baseClass = "font-semibold py-4 px-6 rounded-xl transition-all duration-300 transform border-2 ";
+    const currentQ = questions[currentIndex];
+    
+    // Zwykły styl przed sprawdzeniem
+    if (!isRevealing) {
+      return baseClass + "bg-cyan-50 hover:bg-cyan-500 hover:text-white text-blue-900 border-cyan-400 hover:scale-105 shadow-sm";
+    }
+
+    // Tryb sprawdzania odpowiedzi (COOLDOWN)
+    const isCorrectAnswer = index === currentQ.c;
+    const isSelectedAnswer = index === selectedAnswerIdx;
+
+    if (isCorrectAnswer) {
+      // PRAWIDŁOWA ODPOWIEDŹ -> ZIELONY NEON
+      return baseClass + "bg-green-500 text-white border-green-300 shadow-[0_0_20px_#4ade80,inset_0_0_10px_#4ade80] scale-105 z-10";
+    }
+    
+    if (isSelectedAnswer && !isCorrectAnswer) {
+      // BŁĘDNA ODPOWIEDŹ ZAZNACZONA PRZEZ GRACZA -> CZERWONY NEON
+      return baseClass + "bg-red-600 text-white border-red-400 shadow-[0_0_20px_#f87171,inset_0_0_10px_#f87171] scale-95";
+    }
+
+    // RESZTA ODPOWIEDZI (WYGASZENIE)
+    return baseClass + "bg-gray-100 text-gray-400 border-gray-200 opacity-20 scale-90 pointer-events-none";
+  };
+
+  if (!selectedLevel) {
     return (
       <div className="flex flex-col items-center gap-4 w-full">
-        <h2 className="text-3xl text-blue-900 font-bold mb-6">Morskie Puzzle</h2>
-        <button onClick={() => initGame('easy')} className="bg-cyan-500 hover:bg-cyan-400 text-white font-bold py-3 px-8 rounded-full w-80 shadow-md transition transform hover:scale-105">👶 Łatwy (3x4 elementy)</button>
-        <button onClick={() => initGame('medium')} className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-full w-80 shadow-md transition transform hover:scale-105">🏖️ Średni (4x5 elementów)</button>
-        <button onClick={() => initGame('hard')} className="bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 px-8 rounded-full w-80 shadow-md transition transform hover:scale-105">⚓ Trudny (6x7 elementów)</button>
+        <h2 className="text-3xl text-blue-900 font-bold mb-6">Wybierz poziom trudności</h2>
+        <button onClick={() => setSelectedLevel('baby')} className="bg-cyan-400 hover:bg-cyan-300 text-white font-bold py-3 px-8 rounded-full w-72 shadow-md transition transform hover:scale-105">👶 Mały Odkrywca (B. Łatwy)</button>
+        <button onClick={() => setSelectedLevel('easy')} className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-8 rounded-full w-72 shadow-md transition transform hover:scale-105">🏖️ Plażowicz (Łatwy)</button>
+        <button onClick={() => setSelectedLevel('medium')} className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-full w-72 shadow-md transition transform hover:scale-105">⚓ Wilk Morski (Średni)</button>
+        <button onClick={() => setSelectedLevel('hard')} className="bg-blue-800 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full w-72 shadow-md transition transform hover:scale-105">🌐 Modelarz (Trudny)</button>
         <button onClick={goBack} className="mt-6 text-red-500 hover:text-red-400 font-bold underline">Wróć do Menu</button>
       </div>
     );
   }
 
+  if (loading) return (
+    <div className="flex flex-col items-center gap-4">
+      <h2 className="text-2xl text-blue-900 font-bold animate-pulse">Przeszukiwanie głębin... 🌊</h2>
+      <p className="text-sm font-mono text-gray-500 bg-gray-100 p-2 rounded">{debugMessage}</p>
+    </div>
+  );
+
   if (isFinished) {
+    const percent = Math.round((score / questions.length) * 100);
     return (
       <div className="flex flex-col items-center gap-4 p-8 w-full">
-        <h2 className="text-4xl text-blue-900 font-bold mb-2">Ułożone!</h2>
-        <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-inner text-center w-full max-w-sm mb-4 border border-white">
-          <p className="text-lg text-gray-500 mb-1">Poziom: <span className="font-bold text-blue-800 uppercase">{levels[level].name}</span></p>
-          <p className="text-xl text-blue-800 mb-2">Ruchy: <span className="font-bold text-red-500 text-3xl block">{moves}</span></p>
-          <p className="text-xl text-blue-800">Czas: <span className="font-bold text-blue-600">{timer} s</span></p>
+        <h2 className="text-4xl text-blue-900 font-bold mb-2">Koniec Misji! 🎉</h2>
+        <div className="bg-white/80 p-6 rounded-2xl shadow-inner text-center w-full max-w-sm mb-4 border-2 border-white">
+          <p className="text-lg text-gray-500 mb-1">Poziom: <span className="font-bold text-blue-800 uppercase">{selectedLevel === 'baby' ? 'mały odkrywca' : selectedLevel}</span></p>
+          <p className="text-xl text-blue-800 mb-2">Wynik: <span className="font-bold text-green-600 text-3xl block">{percent}%</span></p>
+          <p className="text-xl text-blue-800">Czas: <span className="font-bold text-orange-500">{timeTaken} s</span></p>
         </div>
         <button 
-          onClick={() => onSaveScore(`PUZZLE (${levels[level].name.toUpperCase()})`, `${moves} RUCHÓW`, moves, timer)} 
+          onClick={() => onSaveScore(`QUIZ (${selectedLevel === 'baby' ? 'BABY' : selectedLevel?.toUpperCase()})`, `${percent}%`, percent, timeTaken)} 
           className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 border-4 border-blue-900 font-extrabold py-3 px-8 rounded-full shadow-lg transform transition hover:-translate-y-1 text-xl"
         >
           Zapisz Wynik
         </button>
-        <button onClick={goBack} className="mt-4 text-gray-500 hover:text-gray-700 font-bold underline transition-colors">
+        <button onClick={goBack} className="mt-4 text-gray-500 hover:text-gray-700 font-bold underline">
           Wróć do Menu
         </button>
       </div>
     );
   }
 
-  const config = levels[level];
+  const currentQ = questions[currentIndex];
+  if (!currentQ) return null;
 
   return (
     <div className="flex flex-col items-center w-full relative">
-      <div className="flex justify-between w-full mb-4 px-4 max-w-2xl">
-        <span className="text-xl text-red-500 font-bold tracking-wider bg-white/50 px-4 py-1 rounded-full shadow-sm">
-          Ruchy: {moves}
+      {debugMessage.includes('❌') && (
+        <div className="w-full bg-red-100 text-red-700 border border-red-400 p-2 text-xs mb-4 rounded font-mono">
+          {debugMessage}
+        </div>
+      )}
+      
+      <div className="flex justify-between w-full mb-4 px-4">
+        <span className="text-lg text-cyan-600 font-bold uppercase tracking-wider">
+          Pytanie {currentIndex + 1} / {questions.length}
         </span>
-        <span className="text-xl text-blue-600 font-bold tracking-wider font-mono bg-white/50 px-4 py-1 rounded-full shadow-sm">
-          Czas: {timer}s
+        <span className="text-sm bg-blue-100 text-blue-800 py-1 px-3 rounded-full font-bold uppercase border border-blue-200 shadow-sm">
+          Poziom: {selectedLevel === 'baby' ? 'mały odkrywca' : selectedLevel}
         </span>
       </div>
-
-      <div 
-        className="grid gap-[2px] bg-blue-900/10 p-1 rounded-lg shadow-xl relative w-full max-w-[700px] border-4 border-white/40"
-        style={{ 
-          gridTemplateColumns: `repeat(${config.cols}, minmax(0, 1fr))`,
-          aspectRatio: `${config.cols} / ${config.rows}` 
-        }}
-      >
-        {tiles.map((correctVal, currentIdx) => {
-          const correctRow = Math.floor(correctVal / config.cols);
-          const correctCol = correctVal % config.cols;
-          
-          const posX = (correctCol / (config.cols - 1)) * 100;
-          const posY = (correctRow / (config.rows - 1)) * 100;
-
-          const isSelected = selectedIdx === currentIdx;
-
-          return (
-            <div
-              key={currentIdx}
-              onClick={() => handleTileClick(currentIdx)}
-              className={`w-full h-full bg-no-repeat transition-all duration-200 border-2 ${isSelected ? 'border-red-500 scale-90 z-10 shadow-[0_0_15px_red]' : 'border-white/20'} ${isPlaying && !showPreview ? 'cursor-pointer hover:border-white/80' : 'cursor-default'}`}
-              style={{
-                backgroundImage: `url('${imageUrl}')`,
-                backgroundSize: `${config.cols * 100}% ${config.rows * 100}%`,
-                backgroundPosition: `${posX}% ${posY}%`
-              }}
-            />
-          );
-        })}
-
-        {/* NAKŁADKA PODGLĄDU - TERAZ Z OBJECT-FILL */}
-        {showPreview && (
-            <div className="absolute inset-0 bg-white/30 backdrop-blur-sm p-2 rounded-lg z-20 flex items-center justify-center animate-fadeIn">
-                <img 
-                    src={imageUrl} 
-                    alt="Podgląd" 
-                    // ZMIANA: object-cover na object-fill
-                    className="w-full h-full object-fill rounded border-4 border-white shadow-2xl"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                      e.currentTarget.parentElement!.innerHTML = '<div class="bg-red-100 text-red-600 p-4 rounded font-bold text-center">Brak zdjęcia!<br/>Upewnij się, że plik istnieje w folderze public/puzzle/</div>';
-                    }}
-                />
-            </div>
-        )}
+      
+      <p className="text-2xl text-blue-900 font-bold mb-8 text-center min-h-[80px] flex items-center justify-center bg-white/80 backdrop-blur-sm w-full rounded-2xl shadow-sm p-4 border border-white">
+        {currentQ.q}
+      </p>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl mb-8 relative">
+        {/* Przezroczysta nakładka blokująca podwójne kliknięcie */}
+        {isRevealing && <div className="absolute inset-0 z-20"></div>}
+        
+        {currentQ.a.map((answer, index) => (
+          <button
+            key={index}
+            onClick={() => handleAnswer(index)}
+            className={getButtonClass(index)}
+          >
+            {answer}
+          </button>
+        ))}
       </div>
-
-      <div className="flex gap-4 items-center mt-8">
-        {!isPlaying ? (
-            <button onClick={startGame} className="bg-teal-500 hover:bg-teal-400 text-white font-bold py-4 px-10 rounded-full shadow-lg transition text-xl animate-pulse">
-                MIESZAJ I START!
-            </button>
-        ) : (
-            <>
-                <button 
-                    onClick={() => setShowPreview(!showPreview)} 
-                    className={`${showPreview ? 'bg-orange-500 hover:bg-orange-400' : 'bg-blue-600 hover:bg-blue-500'} text-white font-semibold py-3 px-6 rounded-xl transition shadow flex items-center gap-2`}
-                >
-                    {showPreview ? 'Ukryj Podgląd' : 'Pokaż Podgląd'}
-                </button>
-
-                <button onClick={() => setLevel(null)} className="text-red-400 hover:text-red-600 font-bold underline transition-colors">
-                    Przerwij
-                </button>
-            </>
-        )}
-      </div>
+      
+      <button onClick={goBack} className="text-red-400 hover:text-red-600 font-bold underline transition-colors">
+        Przerwij Quiz
+      </button>
     </div>
   );
 }
