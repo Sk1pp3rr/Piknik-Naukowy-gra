@@ -1,10 +1,10 @@
-# 🌊 Morska Przygoda Pro
+# Morska Przygoda Pro
 
 Interaktywna aplikacja desktopowa (typu Kiosk) z grami edukacyjnymi o tematyce morskiej. Projekt łączy naukę fizyki morza (wiry), logiczne myślenie (puzzle) oraz wiedzę ogólną (quiz). Aplikacja jest zbudowana w technologii React i opakowana w Electron, co czyni ją odporną na przypadkowe zamknięcia podczas pikników naukowych.
 
 ---
 
-## 📂 Struktura plików
+## Struktura plików
 
 Projekt został podzielony na moduły, aby kod był czysty i łatwy w edycji:
 
@@ -27,7 +27,7 @@ Projekt został podzielony na moduły, aby kod był czysty i łatwy w edycji:
 
 ---
 
-## 🚀 Jak to uruchomić?
+## Jak to uruchomić?
 
 Masz do wyboru trzy sposoby, w zależności od tego, co chcesz osiągnąć:
 
@@ -46,7 +46,7 @@ Po skompilowaniu projektu do pliku `.exe` (szczegóły niżej), wystarczy dwukro
 
 ---
 
-## ⚙️ Konfiguracja i modyfikacje
+## Konfiguracja i modyfikacje
 
 ### 1. Jak dodać własne zdjęcia do Puzzli?
 1. Wklej swoje zdjęcia (w formacie `.jpg`) do folderu `public/puzzle/`.
@@ -67,7 +67,7 @@ Wyniki są zapisywane i sortowane w pełni automatycznie:
 
 ---
 
-## 🔑 Tryb Administratora i Bezpieczeństwo
+## Tryb Administratora i Bezpieczeństwo
 
 Aby nikt przypadkiem nie wyłączył gry na stoisku, **skróty takie jak `Alt+F4` oraz `F11` są całkowicie zablokowane**.
 
@@ -84,7 +84,7 @@ Wyniki w wersji z Electronem zapisują się w plikach systemowych Windowsa. Aby 
 
 ---
 
-## 📦 Kompilacja do gotowego pliku .exe
+## Kompilacja do gotowego pliku .exe
 
 Kiedy gra jest w 100% gotowa, możesz spakować ją do jednego pliku instalacyjnego `.exe`, który bez problemu przeniesiesz na pendrive na dowolnego laptopa.
 
@@ -95,5 +95,5 @@ Kiedy gra jest w 100% gotowa, możesz spakować ją do jednego pliku instalacyjn
 
 ---
 
-## 📜 Licencja
+## Licencja
 Projekt udostępniany na licencji **MIT**. Pracownia Modelowania Procesów Fizycznych w Morzu i Atmosferze, Zakład Dynamiki Morza IOPAN. Baw się dobrze i ucz innych!
