@@ -157,7 +157,7 @@ export default function Quiz({ goBack, onSaveScore }: { goBack: () => void, onSa
 
   if (loading) return (
     <div className="flex flex-col items-center gap-4">
-      <h2 className="text-2xl text-blue-900 font-bold animate-pulse">Przeszukiwanie głębin... 🌊</h2>
+      <h2 className="text-2xl text-blue-900 font-bold animate-pulse">Przeszukiwanie głębin...</h2>
       <p className="text-sm font-mono text-gray-500 bg-gray-100 p-2 rounded">{debugMessage}</p>
     </div>
   );
@@ -166,7 +166,7 @@ export default function Quiz({ goBack, onSaveScore }: { goBack: () => void, onSa
     const percent = Math.round((score / questions.length) * 100);
     return (
       <div className="flex flex-col items-center gap-4 p-8 w-full">
-        <h2 className="text-4xl text-blue-900 font-bold mb-2">Koniec Misji! 🎉</h2>
+        <h2 className="text-4xl text-blue-900 font-bold mb-2">Koniec Misji!</h2>
         <div className="bg-white/80 p-6 rounded-2xl shadow-inner text-center w-full max-w-sm mb-4 border-2 border-white">
           <p className="text-lg text-gray-500 mb-1">Poziom: <span className="font-bold text-blue-800 uppercase">{selectedLevel === 'baby' ? 'mały odkrywca' : selectedLevel}</span></p>
           <p className="text-xl text-blue-800 mb-2">Wynik: <span className="font-bold text-green-600 text-3xl block">{percent}%</span></p>

@@ -3,38 +3,57 @@ import { useState, useEffect, useRef } from 'react';
 // Stałe fizyczne dla planszy
 const W = 400, H = 400;
 const bounds = 2.9, dt = 0.04, eps = 0.08, targetRadius = 0.18;
-const A = { x: -2.5, y: -2.0 }, B = { x: 2.3, y: 2.0 };
+
+type Point = { x: number; y: number };
+type Scenario = { A: Point; B: Point };
+
+const SCENARIOS: Scenario[] = [
+  { A: { x: -2.5, y: -2.0 }, B: { x: 2.3, y: 2.0 } },  // (Lewy dół -> Prawy góra)
+  { A: { x: -2.5, y: 2.5 }, B: { x: 2.5, y: -2.5 } },  // (Lewy góra -> Prawy dół)
+  { A: { x: 0.0, y: -2.6 }, B: { x: 0.0, y: 2.6 } },   // Pionowo przez środek
+  { A: { x: -2.6, y: 0.0 }, B: { x: 2.6, y: 0.0 } },   // Poziomo przez środek
+  { A: { x: 2.5, y: -2.0 }, B: { x: -2.5, y: 2.0 } }   // (Prawy dół -> Lewy góra)
+];
+
+function randomStrength() {
+  const value = Math.random()*4 * (Math.random() < 0.5 ? -1 : 1);
+  return value;
+}
 
 type Vortex = { id: number; x: number; y: number; strength: number; colorClass: string; hex: string; name: string };
-type Point = { x: number; y: number };
 
 export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSaveScore: (g: string, t: string, n: number, tm: number | null) => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animRef = useRef<number | null>(null);
+  const animRef = useRef<number | null>(null); 
   
+  const [levelPoints, setLevelPoints] = useState<Scenario>(() => SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)]);
+  const pointsRef = useRef(levelPoints);
+
   const gameRef = useRef({
-    particle: { x: A.x, y: A.y },
+    particle: { x: levelPoints.A.x, y: levelPoints.A.y },
     traj: [] as Point[],
     pathLength: 0,
     isRunning: false
   });
 
   const [vortices, setVortices] = useState<Vortex[]>([
-    { id: 0, x: -1.4, y: 0.0, strength: 0.7, colorClass: 'text-blue-500 accent-blue-500', hex: '#3b82f6', name: 'Niebieski' },
-    { id: 1, x: 0.0, y: 1.4, strength: 1, colorClass: 'text-green-500 accent-green-500', hex: '#22c55e', name: 'Zielony' },
-    { id: 2, x: 1.4, y: -1.0, strength: -1, colorClass: 'text-orange-500 accent-orange-500', hex: '#f97316', name: 'Pomarańcz' }
+    { id: 0, x: -1.4, y: 0.0, strength: randomStrength(), colorClass: 'text-blue-500 accent-blue-500', hex: '#3b82f6', name: 'Niebieski' },
+    { id: 1, x: 0.0, y: 1.4, strength: randomStrength(), colorClass: 'text-green-500 accent-green-500', hex: '#22c55e', name: 'Zielony' },
+    { id: 2, x: 1.4, y: -1.0, strength: randomStrength(), colorClass: 'text-orange-500 accent-orange-500', hex: '#f97316', name: 'Pomarańcz' }
   ]);
   
   const vorticesRef = useRef(vortices);
-  useEffect(() => {
-    vorticesRef.current = vortices;
-  }, [vortices]);
+  
+  // Zapewnia odświeżenie referencji, żeby Canvas miał zawsze aktualne dane
+  useEffect(() => { vorticesRef.current = vortices; }, [vortices]);
+  useEffect(() => { 
+    pointsRef.current = levelPoints; 
+    draw(); 
+  }, [levelPoints]);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
-  
-  // NOWE STANY: Dystans na żywo i komunikaty błędów
   const [liveDistance, setLiveDistance] = useState(0);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -47,9 +66,11 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const { A, B } = pointsRef.current; // Pobieramy aktualne punkty z referencji
+
     ctx.clearRect(0, 0, W, H);
     
-    // 1. STRZAŁKI WEKTOROWE
+    // STRZAŁKI WEKTOROWE
     const step = 6 / 16;
     for (let gx = -3; gx <= 3; gx += step) {
       for (let gy = -3; gy <= 3; gy += step) {
@@ -100,7 +121,7 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
       }
     }
 
-    // 2. BAZA
+    // BAZA
     ctx.beginPath(); ctx.arc(toPixX(B.x), toPixY(B.y), targetRadius * (W / 6), 0, Math.PI * 2);
     ctx.fillStyle = "rgba(128, 0, 128, 0.3)"; ctx.fill(); 
     ctx.fillStyle = "purple"; ctx.font = "bold 14px Arial"; ctx.fillText("B", toPixX(B.x) - 5, toPixY(B.y) + 5);
@@ -119,7 +140,7 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
       ctx.fillText(symbol, toPixX(vt.x) - 5, toPixY(vt.y) + 4);
     });
 
-    // 3. TRASA
+    // TRASA
     const { particle, traj } = gameRef.current;
     
     if (traj.length > 1) {
@@ -139,6 +160,7 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
   const animate = () => {
     if (!gameRef.current.isRunning) return;
 
+    const { B } = pointsRef.current;
     let p = gameRef.current.particle;
     let u = 0, v = 0;
 
@@ -164,7 +186,6 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
 
     draw(); 
     
-    // AKTUALIZACJA DYSTANSU NA ŻYWO!
     setLiveDistance(gameRef.current.pathLength);
 
     const distToB = Math.sqrt(Math.pow(nx - B.x, 2) + Math.pow(ny - B.y, 2));
@@ -176,8 +197,7 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
       return;
     }
 
-    // ZBYT DŁUGA TRASA - Aktywacja nakładki w UI
-    if (gameRef.current.pathLength > 150) {
+    if (gameRef.current.pathLength > 500) {
         gameRef.current.isRunning = false;
         setIsPlaying(false);
         setErrorMsg("Pływak zgubił się w wielkim oceanie! Ustaw odpowiednio siły prądów morskich i spróbuj wytyczyć krótszą trasę.");
@@ -188,18 +208,16 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
   };
 
   useEffect(() => {
-    // Rysuje planszę, gdy zmieniamy suwaki przed startem
-    // setTimeout zapobiega błędowi "pustej planszy" - daje Reactowi czas na wyrenderowanie canvasu po resecie gry
     if (!isPlaying && !isFinished) {
       setTimeout(() => draw(), 10);
     }
   }, [vortices, isPlaying, isFinished]);
 
   const startGame = () => {
-    setErrorMsg(null); // Ukrywa błąd przy nowym starcie
+    setErrorMsg(null); 
     setLiveDistance(0);
     gameRef.current = {
-      particle: { x: A.x, y: A.y },
+      particle: { x: pointsRef.current.A.x, y: pointsRef.current.A.y },
       traj: [],
       pathLength: 0,
       isRunning: true
@@ -210,26 +228,30 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
     animRef.current = requestAnimationFrame(animate);
   };
 
-  const resetGame = () => {
+  const resetAndRandomize = () => {
+    const newPoints = SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)];
+    setLevelPoints(newPoints); // To uruchomi useEffect i narysuje nową planszę
+    
     setErrorMsg(null);
-    setLiveDistance(0); // Zeruje licznik w UI po restarcie
+    setLiveDistance(0);
     gameRef.current.isRunning = false;
     if (animRef.current) cancelAnimationFrame(animRef.current);
-    gameRef.current.particle = { x: A.x, y: A.y };
+    gameRef.current.particle = { x: newPoints.A.x, y: newPoints.A.y };
     gameRef.current.traj = [];
     gameRef.current.pathLength = 0;
     setIsPlaying(false);
-    draw();
+    setIsFinished(false);
   };
 
   const handleSliderChange = (id: number, val: number) => {
     setVortices(prev => prev.map(v => v.id === id ? { ...v, strength: val } : v));
   };
 
+  // EKRAN WYGRANEJ
   if (isFinished) {
     return (
       <div className="flex flex-col items-center gap-4 p-8 w-full">
-        <h2 className="text-4xl text-blue-900 font-bold mb-2">Cel Osiągnięty! 🎯</h2>
+        <h2 className="text-4xl text-blue-900 font-bold mb-2">Cel Osiągnięty!</h2>
         <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-inner text-center w-full max-w-sm mb-4 border border-white">
           <p className="text-lg text-gray-500 mb-1">Długość przebytej trasy:</p>
           <p className="text-4xl text-red-500 font-bold mb-2">{finalScore.toFixed(1)} PKT</p>
@@ -238,8 +260,8 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
         <button onClick={() => onSaveScore("WIRY", `${finalScore.toFixed(1)} PKT`, finalScore, null)} className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 border-4 border-blue-900 font-extrabold py-3 px-8 rounded-full shadow-lg transition text-xl mb-2 hover:-translate-y-1">
           Zapisz Wynik
         </button>
-        <button onClick={() => { setIsFinished(false); resetGame(); }} className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-6 rounded-full transition">
-          Spróbuj wykręcić lepszy czas
+        <button onClick={resetAndRandomize} className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-6 rounded-full transition">
+          Zagraj na nowej trasie
         </button>
         <button onClick={goBack} className="mt-4 text-gray-500 hover:text-gray-700 font-bold underline">
           Wróć do Menu
@@ -248,64 +270,72 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
     );
   }
 
+  // DWUKOLUMNOWY UKŁAD
   return (
-    <div className="flex flex-col items-center w-full">
-      <div className="flex justify-between items-center w-full mb-4 px-2">
-        <h2 className="text-2xl text-blue-900 font-bold">Oceaniczne Prądy</h2>
-        <span className="bg-red-100 text-red-600 font-bold py-1 px-3 rounded-full border border-red-300 shadow-sm transition-all duration-75">
-          {/* Używamy stanu liveDistance, który reaguje na bieżąco */}
-          Dystans: {liveDistance.toFixed(1)}
-        </span>
-      </div>
-
-      <div className="bg-sky-50 border-4 border-blue-900 rounded-xl overflow-hidden shadow-2xl relative">
-        <canvas ref={canvasRef} width={W} height={H} className="block" />
+    <div className="flex flex-col md:flex-row items-center md:items-start justify-center gap-10 w-full max-w-5xl mx-auto">
+      
+      {/* LEWA KOLUMNA: Plansza i Dystans */}
+      <div className="flex flex-col items-center flex-shrink-0">
+        <h2 className="text-3xl text-blue-900 font-bold mb-4 uppercase tracking-wider block md:hidden">Prądy Morskie</h2>
         
-        {/* NAKŁADKA Z BŁĘDEM (Pojawia się wewnątrz okna gry!) */}
-        {errorMsg && (
-          <div className="absolute inset-0 bg-red-900/90 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center z-10 animate-fadeIn">
-            <span className="text-5xl mb-4">⚠️</span>
-            <h3 className="text-2xl font-bold text-white mb-2">Misja Nieudana</h3>
-            <p className="text-red-100 mb-6">{errorMsg}</p>
-            <button onClick={resetGame} className="bg-white text-red-900 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-200 transition transform hover:scale-105">
-              Resetuj Planszę
+        <div className="bg-sky-50 border-4 border-blue-900 rounded-xl overflow-hidden shadow-2xl relative">
+          <canvas ref={canvasRef} width={W} height={H} className="block" />
+          
+          {errorMsg && (
+            <div className="absolute inset-0 bg-red-900/90 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center z-10 animate-fadeIn">
+              <span className="text-5xl mb-4">⚠️</span>
+              <h3 className="text-2xl font-bold text-white mb-2">Misja Nieudana</h3>
+              <p className="text-red-100 mb-6 text-sm px-4">{errorMsg}</p>
+              <button onClick={resetAndRandomize} className="bg-white text-red-900 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-200 transition transform hover:scale-105">
+                Spróbuj od nowa
+              </button>
+            </div>
+          )}
+        </div>
+        
+        <div className="mt-6 bg-red-100 text-red-600 font-black py-3 px-8 rounded-full border-2 border-red-300 shadow-inner text-2xl w-full text-center">
+          Dystans: {liveDistance.toFixed(1)}
+        </div>
+      </div>
+
+      {/* PRAWA KOLUMNA: Sterowanie i Przyciski */}
+      <div className="flex flex-col items-center w-full max-w-sm pt-2">
+        <h2 className="text-4xl text-blue-900 font-black mb-8 uppercase tracking-widest hidden md:block text-center border-b-4 border-dashed border-cyan-400 pb-2">Prądy Morskie</h2>
+
+        <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-white w-full mb-8">
+          <h3 className="text-center font-bold text-gray-500 mb-6 text-sm uppercase tracking-wider">Zarządzaj siłą prądów (-4 do 4)</h3>
+          {vortices.map(vt => (
+            <div key={vt.id} className="flex items-center gap-4 mb-4">
+              <span className={`font-bold w-24 text-right text-sm ${vt.colorClass}`}>{vt.name}</span>
+              <input 
+                type="range" 
+                min="-4" max="4" step="0.1" 
+                value={vt.strength} 
+                onChange={(e) => handleSliderChange(vt.id, parseFloat(e.target.value))}
+                className={`flex-1 h-3 rounded-lg appearance-none bg-gray-200 outline-none cursor-pointer ${vt.colorClass}`}
+              />
+              <span className="font-mono font-black w-10 text-left text-gray-700 text-lg">{vt.strength.toFixed(1)}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex flex-col gap-4 w-full">
+          {!isPlaying ? (
+            <button onClick={startGame} className="bg-teal-500 hover:bg-teal-400 text-white font-black py-4 px-8 rounded-full shadow-lg transform transition hover:scale-105 text-xl uppercase tracking-wider">
+              Wypuść Pływak
             </button>
-          </div>
-        )}
-      </div>
-
-      <div className="mt-6 bg-white/80 backdrop-blur-sm p-4 rounded-2xl shadow-sm border border-white w-full max-w-[400px]">
-        <h3 className="text-center font-bold text-gray-600 mb-4 text-sm uppercase tracking-wider">Zarządzaj siłą prądów (-4 do 4)</h3>
-        {vortices.map(vt => (
-          <div key={vt.id} className="flex items-center gap-4 mb-3">
-            <span className={`font-bold w-24 text-right text-sm ${vt.colorClass}`}>{vt.name}</span>
-            <input 
-              type="range" 
-              min="-4" max="4" step="0.1" 
-              value={vt.strength} 
-              onChange={(e) => handleSliderChange(vt.id, parseFloat(e.target.value))}
-              className={`flex-1 h-2 rounded-lg appearance-none bg-gray-200 outline-none cursor-pointer ${vt.colorClass}`}
-            />
-            <span className="font-mono font-bold w-8 text-left text-gray-700">{vt.strength.toFixed(1)}</span>
-          </div>
-        ))}
-      </div>
-
-      <div className="flex gap-4 mt-6">
-        {!isPlaying ? (
-          <button onClick={startGame} className="bg-teal-500 hover:bg-teal-400 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-105 text-lg">
-            Wypuść Pływak (Start)
+          ) : (
+            <button onClick={resetAndRandomize} className="bg-red-500 hover:bg-red-400 text-white font-bold py-4 px-8 rounded-full shadow-lg transition text-xl">
+              Zatrzymaj i Zmień Trasę
+            </button>
+          )}
+          
+          <button onClick={goBack} className="mt-4 text-gray-500 hover:text-gray-800 font-bold underline transition-colors">
+            Wróć do Menu Głównego
           </button>
-        ) : (
-          <button onClick={resetGame} className="bg-red-500 hover:bg-red-400 text-white font-bold py-3 px-8 rounded-full shadow-lg transition text-lg">
-            Zatrzymaj i Resetuj
-          </button>
-        )}
+        </div>
       </div>
       
-      <button onClick={goBack} className="mt-6 text-gray-500 hover:text-gray-700 font-bold underline transition-colors">
-        Wróć do Menu
-      </button>
     </div>
   );
 }
