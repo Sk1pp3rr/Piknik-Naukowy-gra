@@ -11,12 +11,28 @@ const myImages = [
   './puzzle/1.jpg',
   './puzzle/2.jpg',
   './puzzle/3.jpg',
-  './puzzle/4.jpg',
+  //'./puzzle/4.jpg',
   './puzzle/5.jpg',
-  './puzzle/6.jpg',
-  './puzzle/7.jpg',
-  './puzzle/8.jpg',
-  './puzzle/9.jpg'
+  //'./puzzle/6.jpg',
+  //'./puzzle/7.jpg',
+  //'./puzzle/8.jpg',
+  './puzzle/9.jpg',
+  './puzzle/10.jpg',
+  './puzzle/11.jpg',
+  './puzzle/12.jpg',
+  './puzzle/13.jpg',
+  './puzzle/14.jpg',
+  './puzzle/15.jpg',
+  './puzzle/16.jpg',
+  './puzzle/17.jpg',
+  './puzzle/18.jpg',
+  './puzzle/19.jpg',
+  './puzzle/20.jpg',
+  './puzzle/21.jpg',
+  './puzzle/22.jpg',
+  './puzzle/23.jpg',
+  './puzzle/24.jpg',
+  './puzzle/25.jpg'
 ];
 
 export default function Puzzle({ goBack, onSaveScore }: { goBack: () => void, onSaveScore: (g: string, t: string, n: number, tm: number | null) => void }) {

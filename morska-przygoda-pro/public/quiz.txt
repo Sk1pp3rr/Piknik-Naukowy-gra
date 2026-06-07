@@ -1,91 +1,130 @@
-# BABY (50)
-Co pływa po wodzie?|Statek,Samolot,Samochód,Rower|0|baby
-Jakiego koloru jest morze?|Niebieskie,Czerwone,Zielone,Żółte|0|baby
-Kto mieszka w muszli?|Ryba,Krab,Słoń,Ptak|1|baby
-Co daje fale na morzu?|Wiatr,Piłka,Drzewo,Kamień|0|baby
-Co możemy znaleźć na plaży?|Piasek,Śnieg,Kwiaty,Kamień|0|baby
-Kto mieszka w oceanie?|Ryby,Psy,Ptaki,Koty|0|baby
-Co można zbierać na plaży?|Muszle,Książki,Samochody,Klocki|0|baby
-Co unosi się na wodzie?|Drewniana deska,Kamień,Ziemniak,Krzesło|0|baby
-Co robi wiatr?|Wieje,Śpiewa,Świeci,Pływa|0|baby
-Pływak Argo wygląda jak:|Mała żółta boja,Samolot,Kot,Książka|0|baby
+# BABY
+Co pływa po wodzie?|Samolot,Samochodzik,Rower,Statek|3|baby
+Jakiego koloru jest morze?|Czerwone,Zielone,Niebieskie,Żółte|2|baby
+Kto mieszka w muszli?|Ryba,Krab,Łabędź,Ptak|1|baby
+Od czego powstają fale na morzu?|Słońce,Ryby,Wiatr,Chmury|2|baby
+Z czego najczęściej zbudowana jest piaszczysta plaża?|Z maleńkich ziarenek skał,Z cukru,Z drobnych okruszków mąki,Z wiórów drewnianych|0|baby
+Co wyrzuca morze na brzeg po wielkim sztormie?|Kaczuszki,Muszelki i glony,Kredki,Pluszowe misie|1|baby
+Co budują dzieci z mokrego piasku na plaży?|Zamki,Prawdziwe samochody,Latające samoloty,Bałwany|0|baby
+Jaki kolor ma piasek na większości naszych plaż?|Fioletowy,Niebieski,Śnieżnobiały,Żółty|3|baby
+Co znajduje się pod wodą w morzu?|Trawa,Dno morskie,Kafelki,Atlantyda|1|baby
+Co zbieramy do wiaderka na plaży?|Suchy chleb,Kolorowe guziki,Muszelki, Kawałki szkła|2|baby
+Ciepły na plaży?|Lód,Piasek,Sweter,Kiełbaski|1||baby
+Kto mieszka w oceanie?|Żaby,Alpaki,Kotki,Ryby|3|baby
+Co można zbierać na piaszczystej plaży?|Muszle,Kamienie,Kwiaty,Koraliki|0|baby
+Co unosi się na wodzie?|Kamień,Kajak,Ślimak,Muszla|1|baby
+Pływak Argo wygląda jak:|Ponton,Koło ratunkowe,Duża boja,Piłka|2|baby
+Dlaczego ryba ma płetwy?|Żeby pływać,Żeby zmieniać głębokość,Aby atakować inne ryby,Żeby oddychać|0|baby
+Co robi latarnia morska?|Świeci światłem dla statków,Gra muzykę,Miejsce odpoczynku marynarzy,Robi zdjęcia|0|baby
+Jak nazywa się fala, która jest tak duża, że się pieni?|Fala śpiąca,Fala cicha,Fala malutka,Fala sztormowa (Grzywacz)|3|baby
+Gdzie woda jest słona?|W kranie,W wannie,W morzu,W basenie|2|baby
+Co zakłada nurek, żeby widzieć pod wodą?|Czapkę,Rękawiczki,Szalik,Maskę|3|baby
 
-Co pije ryba?|Wodę,Sok,Herbatę,Mleko|0|baby
-Czy ryby chodzą do szkoły?|Tak,Nie,Tylko w wakacje,Tylko w nocy|1|baby
-Co robi krab?|Chodzi bokiem,Lata,Pływa jak samolot,Śpiewa|0|baby
-Czy rekin nosi czapkę?|Tak,Nie,W zimie,Tylko w niedzielę|1|baby
-Co robi fala?|Pluska,Śpiewa,Gra w piłkę,Śpi|0|baby
-Czy morze ma kieszenie?|Tak,Nie,Tylko zimą,Tylko w nocy|1|baby
-Co robi mewa?|Lata,Pływa jak ryba,Jeździ rowerem,Śpi pod wodą|0|baby
-Czy ryba ma rower?|Tak,Nie,Ma hulajnogę,Tylko w wakacje|1|baby
-Co jest mokre?|Woda,Piasek,Słońce,Chmura|0|baby
-Czy piasek pływa?|Tak,Nie,Tylko czasem,Gdy chce|1|baby
-
-Co robi słońce nad morzem?|Świeci,Śpiewa,Pływa,Skacze|0|baby
-Czy fala może pogłaskać?|Tak,Nie,Tylko w bajce,Tylko w nocy|0|baby
-Co robi statek?|Pływa,Lata,Skacze,Śpiewa|0|baby
-Czy delfin szczeka?|Tak,Nie,Tylko w zimie,Tylko rano|1|baby
-Co robi wiatr nad morzem?|Wieje,Gotuje,Pisze,Siedzi|0|baby
-Czy ryba czyta książki?|Tak,Nie,Tylko bajki,Tylko nocą|1|baby
-Co robi fala gdy się śmieje?|Pluska,Gwiżdże,Pisze,Gotuje|0|baby
-Czy krab nosi buty?|Tak,Nie,Latem,Tylko do szkoły|1|baby
-Co robi morze?|Faluje,Śpiewa,Rysuje,Śpi|0|baby
-Czy woda jest mokra?|Tak,Nie,Czasem,Tylko zimą|0|baby
-
-Co robi żaglówka?|Pływa,Lata,Biega,Skacze|0|baby
-Czy ryba może latać?|Tak,Nie,Tylko nocą,Tylko zimą|1|baby
-Co robi fala gdy wieje wiatr?|Rośnie,Śpi,Znika,Śpiewa|0|baby
-Czy morze jest suche?|Tak,Nie,Tylko latem,Tylko nocą|1|baby
-Co robi boja?|Pływa,Lata,Śpiewa,Skacze|0|baby
-Czy mewa nurkuje?|Tak,Nie,Tylko nocą,Tylko zimą|0|baby
-Co robi plaża?|Leży,Pływa,Lata,Śpiewa|0|baby
-Czy słońce pływa?|Tak,Nie,Tylko zimą,Tylko nocą|1|baby
-Co robi ryba w wodzie?|Pływa,Biega,Lata,Śpiewa|0|baby
-Czy statek chodzi?|Tak,Nie,Tylko nocą,Tylko zimą|1|baby
-
-Co robi ocean?|Faluje,Śpi,Lata,Skacze|0|baby
-Czy piasek śpiewa?|Tak,Nie,Tylko nocą,Tylko zimą|1|baby
-Co robi fala przy brzegu?|Rozbija się,Śpi,Lata,Gotuje|0|baby
-Czy ryba ma skrzydła?|Tak,Nie,Tylko zimą,Tylko nocą|1|baby
-Co robi wiatr z wodą?|Tworzy fale,Gotuje ją,Zamraża,Śpiewa|0|baby
-Czy morze jest gorące?|Tak,Nie,Zawsze,Tylko nocą|1|baby
-Co pływa po wodzie?|Statek,Samolot,Samochód,Rower|0|seasy
-Jakiego koloru jest morze?|Niebieskie,Czerwone,Zielone,Żółte|0|seasy
-Kto mieszka w muszli?|Ryba,Krab,Słoń,Ptak|1|seasy
-Co daje fale na morzu?|Wiatr,Piłka,Drzewo,Kamień|0|seasy
-Pływak Argo to:|Bujający statek,Morska zabawka,Boja badawcza,Ryba|2|seasy
-Co możemy znaleźć na plaży?|Piasek,Śnieg,Kwiaty,Kamień|0|seasy
-Kto mieszka w oceanie?|Ryby,Psy,Ptaki,Koty|0|seasy
-Co można zbierać na plaży?|Muszle,Książki,Samochody,Klocki|0|seasy
-Pływak Argo wygląda jak:|Mała żółta boja,Samolot,Kot,Książka|0|seasy
-Co unosi się na wodzie?|Drewniana deska,Kamień,Ziemniak,Krzesło|0|seasy
-Fale morskie powstają głównie na skutek:|pływów,wiatru,prądów,opadów|1|easy
+# EASY
+Dlaczego statek potrafi pływać po wodzie?|Ponieważ jest wypełniony magicznym powietrzem,Bo woda pod statkiem zamienia się w lód,Ponieważ silnik odpycha wodę do tyłu,Bo wypiera dużo wody i działa na niego siła wyporu|3|easy
+Kto może zamieszkać w muszli?|Mała rybka,Krab pustelnik,Ziarenka roślin,Morska gwiazda|1|easy
+Co sprawia, że na powierzchni morza powstają fale?|Ruchy wielkich ławic ryb pod powierzchnią,Ciepło słońca, Wiatr który przekazuje swoją energię tafli wody,Turbiny wiatrowe|2|easy
+Skąd bierze się piasek na plaży?|Powstał na skutek upadku meteorytu,To rozdrobnione przez fale morskie skały i muszle,Przywożą go specjalne statki z pustyni,Powstaje z zaschniętej soli morskiej|1|easy
+Pływak Argo to:|Bujający statek,Morska zabawka,Boja badawcza,Smaczna ryba|2|easy
+Fale morskie powstają głównie na skutek:|Pływów,Wiatru,Prądów,Opadów|1|easy
 Jednostką prędkości wiatru jest:|Pa,m/s,°C,m|1|easy
-Cofka to:|spadek poziomu morza,podniesienie poziomu morza przy brzegu,brak fal,zmiana zasolenia|1|easy
-Najspokojniejsze morze występuje zwykle przy:|silnym wietrze,braku wiatru,sztormie,niskim ciśnieniu|1|easy
-Bałtyk jest morzem:|otwartym,półzamkniętym,tropikalnym,oceanem|1|easy
-Sztorm na morzu oznacza:|ciszę,silny wiatr i wysokie fale,spadek ciśnienia,wysokie zasolenie|1|easy
-Pływaki Argo służą do:|mierzenia głębokości stawów,pomiary oceanograficzne,wyławiania ryb,stania na plaży|1|easy
-Wiatr północny w Polsce wieje od:|południa,północy,wschodu,zachodu|1|easy
-Morze jest słone bo:|słońce paruje wodę,woda deszczowa jest słona,prądy mieszają sól,ryby solą wodę|0|easy
-Sinice w morzu są efektem:|czystości wody,wysokiej temperatury i składników odżywczych,wiatru,prądów|1|easy
-Jeśli okres fali wynosi 5 s to częstotliwość wynosi:|5 Hz,0.5 Hz,0.2 Hz,1 Hz|2|medium
-Okres fali to czas:|między grzbietami,jednego obrotu Ziemi,między kolejnymi grzbietami,narastania fali|2|medium
-Który czynnik NAJBARDZIEJ wpływa na wysokość fali?|zasolenie,temperatura,wiatr,opady|2|medium
-Co to jest cofka?|gwałtowny odpływ wody,podniesienie poziomu przy brzegu,spadek ciśnienia,prąd|1|medium
-Fala martwa powstaje gdy:|nie ma wiatru,jest sztorm,prąd przyspiesza,ciepła woda opada|0|medium
-Temperatura wody wpływa na:|prędkość wiatru,gęstość wody i prądy,położenie plaży,pH wody|1|medium
-Prądy powierzchniowe są wywołane głównie przez:|wiatr,pływy,słońce,ryby|0|medium
-Pływaki Argo pomagają w prognozowaniu:|pogody w górach,prądów i temperatury oceanu,kierunku wiatrów lądowych,poziomu jezior|1|medium
-Jak działa Boja Argo?|rejestruje tylko fale,mierzy temperaturę i zasolenie,wypuszcza ryby,podnosi poziom wody|1|medium
-Kiedy występuje największe wzburzenie w Bałtyku?|latem,zimą,wiosną,jesienią|3|medium
+Cofka to:|Spadek poziomu morza,Podniesienie poziomu morza przy brzegu,Brak fal,Zmiana zasolenia|1|easy
+Najspokojniejsze morze występuje zwykle przy:|Braku wiatru,Sztormie,Niskim ciśnieniu, Deszczu|1|easy
+Bałtyk jest morzem:|Otwartym,Półzamkniętym,Tropikalnym,Arktycznym|1|easy
+Sztorm na morzu oznacza:|Ciszę,Silny wiatr i wysokie fale,Spadek ciśnienia,Wysokie zasolenie|1|easy
+Pływaki Argo służą do:|Pomiarów głębokości,Pomiarów oceanograficznych,Wyławiania ryb,Zapewnienia internetu na morzu|1|easy
+Morze jest słone bo:|Słońce wyparowuje wodę,Woda deszczowa jest słona,Prądy mieszają sól,Sól jest wypłukiwana ze skał|0|easy
+Sinice w morzu są efektem:|Czystości wody,Wysokiej temperatury i składników odżywczych,Wiatru,Pądów|1|easy
+Czym są "fale wiatrowe" (wind waves)?|Falami wywołanymi przez przekazywanie energii wiatru na powierzchnię,Falami powstałymi wyłącznie przez trzęsienia ziemi,Falami które powstają tylko w bezwietrzne dni,Falami które płyną zawsze w stronę przeciwną do wiatru|0|easy
+Który czynnik NAJBARDZIEJ wpływa na wysokość fali?|Zasolenie,Temperatura wody,Wiatr,Opady|2|easy
+Prądy powierzchniowe są wywołane głównie przez:|Watr,Pływy,Słońce,Ryby|0|easy
+Pływaki Argo pomagają w :|Prognozowaniu pogody na plaży,analizie prądów i temperatury wody, analizie kierunku wiatrów,Mierzą poziom zarybienia|1|easy
+Jak działa Boja Argo?|Rejestruje tylko fale,Mierzy temperaturę i zasolenie,Wypuszcza ryby,Wyrównuje poziom wody|1|easy
+Pływak Argo dostarcza dane o:|Temperaturze zasoleniu i prądach,Prognozują pogodę,Nadzorują kursy statków,Nadzorują pozycje statków|0|easy
+
+# HARD
 Podwojenie prędkości wiatru powoduje wzrost energii około:|2x,3x,4x,8x|2|hard
-Dlaczego prognozy fal mają ograniczoną dokładność?|modele są złe,morze jest chaotyczne,brak komputerów,za dużo danych|1|hard
-Wzrost poziomu morza o 0.5 m powoduje ryzyko zalania:|liniowe,malejące,nieliniowe,brak zmian|2|hard
-Model numeryczny najlepiej służy do:|dokładnej pogody za miesiąc,analizy scenariuszy,zgadywania,zastąpienia pomiarów|1|hard
-Efekt Coriolisa wpływa na:|wiatr i prądy,tylko na fale,pH wody,położenie plaży|0|hard
-Martwe strefy w morzu są wynikiem:|wysokiego tlenu,niskiego tlenu i nadmiaru składników,wiatru,pływów|1|hard
-Pływaki Argo w ciężkich warunkach:|nie działają,pływają i rejestrują dane,toną,zmieniają kierunek wiatru|1|hard
-Argo dostarcza dane o:|Temperaturze zasoleniu i prądach,Pogodzie w górach,Ruchu samolotów,Ruchu ptaków|0|hard
-Największe fale na Bałtyku są zwykle przy wiatrach:|południowych,wschodnich,zachodnich,północnych|3|hard
-Zjawisko cofki jest szczególnie groźne dla:|statków w porcie,plażowiczów,rybaków przy brzegu,wszystkich powyższych|3|hard
+Wzrost poziomu morza o 0.5 m powoduje ryzyko zalania:|Liniowe,Malejące,Nieliniowe,Brak zmian|2|hard
+Do czego przede wszystkim służą zaawansowane modele numeryczne mórz?|Do analizy scenariuszy,Do zastąpienia rzeczywistych pomiarów,Do redukcji kosztów badań,Do precyzyjnego przewidywania pogodowych z rocznym wyprzedzeniem|0|hard
+Dlaczego modele numeryczne są nazywane „laboratoriami wirtualnymi”?|Pozwalają symulować procesy niemożliwe do odtworzenia w naturze,Ponieważ działają wyłącznie w rzeczywistości wirtualnej,Zastępują naukowcom konieczność wychodzenia z biura,Służą do budowania cyfrowych gier o tematyce morskiej|0|hard
+Jaką funkcję pełni „schemat adwekcji” w kodzie źródłowym modelu?|Odpowiada za automatyczne tworzenie kopii zapasowych danych,Służy do tłumaczenia równań matematycznych na język Python,Łączy model oceanu z modelem ruchu satelitów,Opisuje sposób przemieszczania się masy i energii w przestrzeni,|3|hard
+Czym jest tzw. „spin-up” modelu numerycznego?|Wstępnym etapem obliczeń w którym model dąży do równowagi,Gwałtownym przyspieszeniem obrotów wentylatorów w serwerze,Momentem w którym model przestaje odpowiadać na zapytania,Procesem publikowania prognoz|0|hard
+Jaki wpływ na stabilność modelu ma wybór kroku czasowego (dt)?|Krok czasowy nie ma żadnego wpływu na stabilność a jedynie na czas pracy,Zbyt duży krok czasowy może doprowadzić do przerwania obliczeń,Im mniejszy krok tym model jest bardziej podatny na błędy,Zależy od szybkości połączenia internetowego|1|hard
+Efekt Coriolisa wpływa na:|Tylko na fale,pH wody,Kształt plaży,Wiatr i prądy|3|hard
+Martwe strefy w morzu są wynikiem:|Zbyt wysokiego poziomu tlenu,Zbyt niskiego natlenienie, Silnego wiatru, Wysokich pływów|1|hard
+Największe fale na Bałtyku są zwykle przy wiatrach:|Południowych,Wschodnich,Zachodnich,Północnych|3|hard
+Jak nazywają się podstawowe równania opisujące ruch wody w morzu?|Transformacje Lorentza,Równania Maxwella,Równania Naviera-Stokesa,Zasada nieoznaczoności|2|hard
+Do czego służy siatka obliczeniowa w modelu hydrodynamicznym?|Służy do filtrowania zanieczyszczeń,Określa prędkość przesyłu danych,Dzieli obszar na małe komórki w których rozwiązuje się równania,Podtrzymuje stabilności serwera|2|hard
+Czym jest batymetria w modelu numerycznym morza?|Zbiorem danych o głębokości dna,Sposobem mierzenia zasolenia wody,Algorytmem do przewidywania pogody,Nazwą oprogramowania do grafiki 3D|0|hard
+Co określa tzw. warunek CFL w symulacjach komputerowych?|Zależność między krokiem czasowym a rozmiarem siatki,Maksymalną dopuszczalną temperaturę procesora,Liczbę cząsteczek plastiku w wodzie,Kolorystykę mapy wynikowej|0|hard
+Jak model numeryczny "widzi" wiatr wiejący nad morzem?|Jako zmianę koloru pikseli na mapie,Jako dźwięk o niskiej częstotliwości,Wiatr nie jest uwzględniany w modelach morza,Jako naprężenie ścinające na powierzchni wody|3|hard
+Co to jest asymilacja danych w modelowaniu oceanograficznym?|Poprawianie wyników modelu za pomocą realnych pomiarów,Proces instalacji modelu na dysku twardym,Zamiana liczb na format binarny,Usuwanie błędnych danych|0|hard
+Dlaczego w modelach dzieli się głębokość morza na warstwy?|Aby uwzględnić różnice gęstości i temperatury wody,Aby łatwiej było drukować mapy na papierze,Bo woda na dnie płynie w drugą stronę,Ze względu na ograniczenia pamięci RAM|0|hard
+Czym jest parametryzacja w modelach numerycznych?|Procesem nadawania nazw poszczególnym zmiennym,Rodzajem paliwa do superkomputerów,Uproszczonym opisem procesów,Ustawianiem kolorów na wykresach|2|hard
+Co to są "warunki brzegowe" w modelu morza?|Dane na krawędziach modelowanego obszaru (np. dopływ rzek),Zasady BHP pracy przy komputerze,Linie graniczne na monitorze,Kształt siatki obliczeniowej|0|hard
+Jak nazywa się podejście, w którym śledzimy ruch konkretnej cząstki wody?|Podejście Newtona,Podejście Lagrange'a,Metoda Eulera,Algorytm Newtona|1|hard
+Dlaczego prognozy hydrodynamiczne tracą sprawdzalność wraz z wydłużaniem czasu symulacji?|Przez nieliniowość równań i akumulację małych błędów (efekt motyla),Ponieważ woda morska z czasem zmienia swoją lepkość kinematyczną,Bo procesory komputerowe tracą precyzję po kilku dniach pracy,Z powodu cyklicznych zmian w polu magnetycznym Ziemi|0|hard
+Czym jest turbulencja w modelowaniu i dlaczego stanowi wyzwanie?|Rodzaj błędu wynikający z przegrzania procesorów,Zjawisko polegające na nagłym zamarzaniu wody w modelu,Metoda przesyłania danych między stacjami badawczymi,To chaotyczny ruch wody który wymaga bardzo gęstej siatki obliczeniowej|3|hard
+Co robi modelarz, gdy potrzebuje danych w miejscu, gdzie nie ma punktu siatki?|Zatrzymuje symulację do czasu otrzymania danych z satelity,Wylicza wartość na podstawie sąsiednich punktów (interpolacja),Zawsze przyjmuje wartość najbliższego punktu siatki,Pomija ten obszar i uznaje go za ląd|1|hard
+Jaką rolę w modelowaniu odgrywa albedo lodu morskiego?|Wpływa na prędkość rozpuszczania się soli w zimnej wodzie,To algorytm odpowiedzialny za topnienie lodu,Określa maksymalną grubość kry jaką może policzyć komputer,Określa ile energii słonecznej zostaje odbite od powierzchni|3|hard
+Co to jest dyskretyzacja w kontekście modeli numerycznych?|Proces ukrywania wyników modeli,Sposób na zmniejszenie głośności pracy serwerowni,Szyfrowana metoda przesyłu danych między komputerami,Zamiana ciągłych równań fizyki na postać zrozumiałą dla komputera|3|hard
+Czym jest "interfejs" w sprzężonych modelach numerycznych (np. atmosfera-morze)?|Rodzajem kabla łączącego dwa różne superkomputery,Graficznym menu użytkownika służącym do wyboru koloru mapy,Specjalnym czujnikiem montowanym na bojach pomiarowych,Warstwą wymiany informacji (np. ciepła i pędu) między modelami|3|hard
+Co to jest „analiza czułości” modelu (sensitivity analysis)?|Badanie, jak zmiany danych wejściowych wpływają na wynik końcowy,Sprawdzanie, czy procesor nie przegrzewa się podczas liczenia,Mierzenie czasu reakcji serwera na zapytania użytkowników,Testowanie odporności obudowy komputera na wilgoć i sól|0|hard
+Jaką rolę w modelowaniu falowania pełni „pobranie” (fetch)?|To proces pobierania aktualizacji oprogramowania z internetu,To droga na której wiatr oddziałuje na wodę tworząc fale,To komenda służąca do zapisu wyników na dysku twardym,To nazwa algorytmu usuwającego błędy z siatki obliczeniowej|1|hard
+Czym jest „dyfuzja numeryczna” w wynikach symulacji?|Procesem parowania wody z powierzchni cyfrowego morza,Sztucznym wygładzaniem wartości wynikającym z błędów przybliżeń,Sposobem na przyspieszenie obliczeń poprzez pomijanie ułamków,Mieszaniem się kolorów na końcowej wizualizacji wyników|1|hard
+Dlaczego modele numeryczne są uruchamiane na „węzłach” klastra?|Ponieważ każdy węzeł odpowiada za inny gatunek morskich zwierząt,Bo tylko w ten sposób można połączyć model z siecią Wi-Fi,Aby zapobiec przeciążeniu pojedynczego gniazdka elektrycznego,Aby podzielić ogromną liczbę obliczeń na wiele procesorów naraz|3|hard
+Co w modelowaniu oznacza termin „hindcast”?|Odtwarzanie stanów morza z przeszłości na podstawie historycznych danych,Przewidywanie pogody dla statków rybackich w czasie rzeczywistym,Rodzaj anteny do przesyłania wyników modelu na ląd,Specjalny format pliku do przechowywania zdjęć satelitarnych|0|hard
+Jaki wpływ na model ma „uwarstwienie” (stratification) wody?|Utrudnia pionowe mieszanie się mas wody o różnej gęstości,Powoduje, że model musi być wyświetlany w technologii 3D,Zwiększa ryzyko wystąpienia błędów w kodzie źródłowym,Wpływa wyłącznie na wygląd wizualny generowanych map|0|hard
+
+# MEDIUM
+Pływaki Argo w ciężkich warunkach:|przerywają pracę,pływają i rejestrują dane,toną,zmieniają kierunek wiatru|1|medium
+Co komputer oblicza w ramach tzw. „bilansu masy” w modelu?|Łączną wagę ryb i planktonu w symulowanym obszarze,Ilość wody wpływającej do obszaru zgadza się z ilością wypływającą,Dopuszczalną masę statków które mogą wpłynąć do portu,Sumaryczny ciężar osadów|2|medium
+W jaki sposób modelowanie numeryczne pomaga w walce z zanieczyszczeniem mórz?|Pozwala chemicznie rozpuścić plastik za pomocą algorytmów,Zastępuje potrzebę fizycznego sprzątania plaż przez wolontariuszy,Blokuje wypływanie statków z portów w razie awarii,Przewiduje kierunek przemieszczania zanieczyszczeń|3|medium
+Co jest głównym powodem błędów w prognozach numerycznych?|Słaba moc komputerów,Niedokładność danych wejściowych i przybliżenia matematyczne,Zbyt duża ilość soli w wodzie morskiej zakłócająca procesory,Zmiana stref czasowych podczas trwania obliczeń|1|medium
+Co oznacza termin „rozdzielczość pozioma” w modelu numerycznym?|Odległość między sąsiednimi punktami siatki obliczeniowej,Liczbę kolorów użytych do wizualizacji wyników,Maksymalną głębokość do której model może liczyć parametry,Częstotliwość zapisywania danych wynikowych na dysku|0|medium
+Czym jest "krok czasowy" (time step) w symulacji morza?|Czasem potrzebnym na dopłynięcie statku do portu,Całkowitym czasem obliczeń,Odstępem czasu, co jaki komputer powtarza obliczenia,Momentem w którym kończy się symulacja|2|medium
+Który parametr wody jest kluczowy dla obliczenia jej gęstości?|Temperatura i zasolenie,Przejrzystość i mętność,Zawartość tlenu,Głębokość występowania ryb|0|medium
+Co oznacza, że model jest "niestabilny numerycznie"?|Wyniki obliczeń "uciekają" do nieskończoności,Komputer zaczyna głośno pracować,Model zmienia co chwilę język wyświetlania,Woda w symulacji zawsze stoi w miejscu|0|medium
+Jaką rolę w modelowaniu pełnią pływaki Argo?|Dostarczają dane o profilu temperatury i zasolenia,Służą jako miejsca zasięgu Wi-Fi na morzu,Odbijają fale radiowe aby mierzyć wysokość fal,Są elementami zapasowymi dla statków badawczych|0|medium
+Co to jest wymuszenie (forcing) w modelu numerycznym?|Przymusowe wyłączenie komputera po błędzie,Dane wejściowe (np. wiatr, pływy), które napędzają model,Siła, z jaką programista naciska klawisze,Presja czasu podczas wykonywania obliczeń|1|medium
+Czym różni się model o "wysokiej rozdzielczości" od "niskiej"?|Działa tylko na monitorach 4K,Zawsze podaje wyniki z większym błędem,Zużywa mniej energii elektrycznej,Ma gęstszą siatkę i widzi mniejsze zjawiska|3|medium
+Która siła, wynikająca z ruchu obrotowego Ziemi, wpływa na prądy morskie?|Siła Coriolisa,Siła tarcia kinetycznego,Siła Lorentza,Siła napięcia powierzchniowego|0|medium
+Co komputer oblicza w każdym węźle siatki modelu morza?|Liczbę ryb przepływających w danej chwili,Wartości ciśnienie i temperatura,Odległość od brzegu,Sumę kontrolną plików systemowych|1|medium
+Czym jest "warstwa wymieszana" (mixed layer) w modelach morskich 3D?|Górną warstwą wody o niemal stałej temperaturze i zasoleniu,Obszarem przy dnie gdzie piasek miesza się z wodą,Strefą, w której model łączy dane z różnych satelitów, Miejscem gdzie nie ma fal|0|medium
+Co najbardziej ogranicza rozdzielczość współczesnych modeli globalnych?|Zbyt mała liczba danych,Maksymalna prędkość z jaką fala może poruszać się po morzu,Dostępna moc obliczeniowa i pamięć operacyjna superkomputerów,Rozdzielczość monitorów|2|medium
+Dlaczego w modelach morza uwzględnia się tarcie o dno?|Aby zapobiec "ślizganiu się" i narastaniu błędów numerycznych,Ponieważ hamuje ono ruch wody i wpływa na profil prędkości,Bo piasek wchłania sól z wody morskiej,Tarcie o dno jest pomijalne i nie uwzględnia się go wcale|0|medium
+Czym jest "spójność modelu" (model consistency)?|Zgodnością wyników z prawami zachowania masy i energii,Możliwością uruchomienia modelu na każdym komputerze,Przejrzystość kodu,Stałą prędkością wykonywania obliczeń przez procesor|0|hard
+Jak modelowanie numeryczne pomaga w akcjach ratunkowych na morzu?|Wysyła sygnał SOS bezpośrednio do najbliższych jednostek,Automatycznie nawiguje pomoc na miejscu wypadku,Pozwala przewidzieć dryf człowieka lub obiektu w czasie,Służy do zdalnego sterowania kołami ratunkowymi|0|medium
+Jaki element fizyki opisuje tzw. lepkość wody w modelu?|Słodkość wody morskiej,Tarcie wewnętrzne między cząsteczkami,Przejrzystość toni wodnej,Głębokość zanurzenia statku|1|medium
+Dlaczego modele numeryczne "nie lubią" stromych zmian głębokości dna?|Powodują błędy numeryczne i niestabilność,Bo procesor dłużej liczy duże liczby,Na dnie jest za dużo zanieczyszczeń,Woda spływa wtedy zbyt szybko i modele nie dają rady|0|medium
+Czym jest "anomalia poziomu morza" w wynikach modelu?|Różnicą między aktualnym a średnim poziomem wody,Błędem który trzeba natychmiast skasować,Miejscem, gdzie woda płynie pod górę,Nazwą gatunku ryby głębinowej|0|medium
+Do czego służy modelowanie transportu osadów?|Do przewidywania gdzie woda naniesie piasek (np. w porcie),Do liczenia ile śmieci w morzu,Do sprawdzania czystości powietrza nad morzem,Do badania jakości wody morskiej|0|medium
+Jaką rolę w modelu pełni promieniowanie słoneczne?|Nagrzewa górną warstwę wody i napędza cyrkulację,Zwiększa prędkość prądów powierzchniowych,Wpływa na prędkość obliczeń,Nie ma żadnego znaczenia dla fizyki morza|0|medium
+Co to jest superkomputer w kontekście modelowania?|Komputer z bardzo dużym monitorem,Maszyna która nigdy się nie psuje,Urządzenie do sterowania zdalnego,Wiele połączonych procesorów liczących równolegle|3|medium
+Z jaką prędkością zazwyczaj poruszają się prądy głębinowe w modelach?|Bardzo wolno (centymetry na sekundę),Szybciej niż statki,Z prędkością światła,Z prędkością dźwięku|0|medium
+Jaki wpływ na model ma uwzględnienie ruchu obrotowego Ziemi?|Powoduje pionowe mieszanie się wody w wyniku tarcia o oś Ziemi,Wprowadza siłę Coriolisa zakrzywiającą tory prądów,Zmienia ciśnienie atmosferyczne bezpośrednio nad dnem oceanu,Nie ma żadnego wpływu na dynamikę płynów w skali basenu morza|1|medium
+Co oznacza termin "walidacja modelu" w badaniach morskich?|Sprawdzenie, czy kod źródłowy modelu został poprawnie skompilowany,Optymalizację zużycia energii przez klaster obliczeniowy,Proces nadawania modelowi certyfikatu bezpieczeństwa cyfrowego,Porównanie wyników symulacji z pomiarami in situ|3|medium
+Czym są "prądy gęstościowe" analizowane w modelach oceanicznych?|Przepływem ładunków elektrycznych w silnie zasolonej wodzie,Przemieszczaniem się ławic ryb o dużej biomasie,Ruchami wody wywołanymi różnicami w temperaturze i zasoleniu,Siłami wynikającymi z uderzeń fal o konstrukcje hydrotechniczne|2|medium
+Co dzieje się w trakcie wielodniowych obliczeń modelu numerycznego?|Komputer iteracyjnie rozwiązuje równania dla kolejnych kroków czasowych,Procesor analizuje zdjęcia satelitarne w poszukiwaniu błędów,System operacyjny uczy się prognoz na podstawie bazy danych,Model zatrzymuje się po każdej godzinie, aby zarchiwizować dane na taśmach|0|medium
+Zjawisko cofki jest szczególnie groźne dla:|Statków w porcie,Plażowiczów,Rybaków przy brzegu,Wszystkich powyższych|3|medium
+Dlaczego prognozy fal mają ograniczoną dokładność?|Modele są słabe,Morze jest chaotyczne,Brak dobrych komputerów,Nie przewidują wysokich fal|1|medium
+Kiedy występuje największe wzburzenie w Bałtyku?|Latem,Zimą,Wiosną,Jesienią|3|medium
+Co to jest cofka?|Gwałtowny odpływ wody,Podniesienie poziomu przy brzegu,Spadek ciśnienia,Szybki prąd przybrzeżny|1|medium
+Fala martwa powstaje gdy:|Nie ma wiatru,Jest sztorm,Prąd przyspiesza,Ciepła woda opada|0|medium
+Temperatura wody wpływa na:|prędkość wiatru,gęstość wody i prądy,położenie plaży,pH wody|1|medium
+Jeśli okres fali wynosi 5 s to częstotliwość wynosi:|5 Hz,0.5 Hz,0.2 Hz,1 Hz|2|medium
+Co to jest okres fali (wave period)?|Czas po którym fala całkowicie zanika w głębinach,Czas w którym dwa kolejne grzbiety fali mijają ten sam punkt,Prędkość z jaką cząsteczki wody poruszają się po orbicie,Czas potrzebny na powstanie pierwszej fali po ustaniu wiatru|1|medium
+Co oznacza pojęcie "fale martwe" (swell)?|Fale które przetrwały wiatr i płyną daleko od miejsca powstania,Fale które powstały z powodu bardzo silnego prądu morskiego,Fale które występują tylko w bardzo głębokich rowach oceanicznych,Fale które nie posiadają żadnej energii kinetycznej|0|medium
+Jak nazywa się odległość między dwoma kolejnymi grzbietami fali?|Długość fali,Wysokość fali,Amplituda fali,Okres fali|0|medium
+Co opisuje "amplituda" fali w modelu matematycznym?|Maksymalne wychylenie powierzchni wody od poziomu równowagi,Całkowitą odległość od grzbietu do doliny (rynny) fali,Prędkość z jaką grzbiet fali przesuwa się w stronę brzegu,Czas, po jakim fala uderza w brzeg morza|0|medium
+Dlaczego fala załamuje się przy brzegu?|Bo dno morskie jest zbyt gładkie,Ponieważ woda w płytkiej strefie traci swoje zasolenie,Bo wiatr przestaje wiać w kierunku brzegu,Ponieważ głębokość staje się zbyt mała dla jej orbity|3|medium
+Wiatr północny (N) według nomenklatury meteorologicznej wieje: |Z południa w stronę bieguna,Z północy w stronę równika,Zawsze równolegle do linii brzegu,W kierunku północnym|1|medium
+Co to jest "róża wiatrów" w analizie danych wejściowych do modelu?|Graficzne przedstawienie statystyki kierunków i prędkości wiatru,Gatunek morskiej rośliny reagującej na podmuchy,Przyrząd do mechanicznego mierzenia siły sztormu,Algorytm sortujący dane wiatru od najsłabszych do najsilniejszych|0|medium
+Dlaczego głębokie morze wydaje nam się niebieskie?|Woda pochłania inne barwy a najlepiej odbija i rozprasza światło niebieskie,Bo na dnie leżą niebieskie kamienie,Ponieważ niebo odbija się w wodzie,Bo żyją w nim tylko niebieskie ryby|0|medium
+
+
+
+
+
+
+
