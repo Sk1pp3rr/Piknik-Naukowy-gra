@@ -29,7 +29,7 @@ Pływak Argo to:|Bujający statek,Morska zabawka,Boja badawcza,Smaczna ryba|2|ea
 Fale morskie powstają głównie na skutek:|Pływów,Wiatru,Prądów,Opadów|1|easy
 Jednostką prędkości wiatru jest:|Pa,m/s,°C,m|1|easy
 Cofka to:|Spadek poziomu morza,Podniesienie poziomu morza przy brzegu,Brak fal,Zmiana zasolenia|1|easy
-Najspokojniejsze morze występuje zwykle przy:|Braku wiatru,Sztormie,Niskim ciśnieniu, Deszczu|1|easy
+Najspokojniejsze morze występuje zwykle przy:|Braku wiatru,Sztormie,Niskim ciśnieniu, Deszczu|0|easy
 Bałtyk jest morzem:|Otwartym,Półzamkniętym,Tropikalnym,Arktycznym|1|easy
 Sztorm na morzu oznacza:|Ciszę,Silny wiatr i wysokie fale,Spadek ciśnienia,Wysokie zasolenie|1|easy
 Pływaki Argo służą do:|Pomiarów głębokości,Pomiarów oceanograficznych,Wyławiania ryb,Zapewnienia internetu na morzu|1|easy

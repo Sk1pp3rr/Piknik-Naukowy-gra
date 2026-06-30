@@ -120,17 +120,18 @@ function App() {
       
       case 'name-entry':
         return (
-          <div className="bg-black p-12 rounded-3xl border-8 border-green-500 text-center font-mono shadow-[0_0_50px_rgba(34,197,94,0.3)] no-scrollbar">
+          // Dodano w-full i max-w-2xl, żeby okno było szersze
+          <div className="bg-black p-8 md:p-12 rounded-3xl border-8 border-green-500 text-center font-mono shadow-[0_0_50px_rgba(34,197,94,0.3)] no-scrollbar w-full max-w-2xl">
             <h2 className="text-4xl text-green-400 font-bold mb-4 uppercase">Twoje Miejsce: {pendingScore?.rank}</h2>
             <h3 className="text-2xl text-yellow-400 mb-12">{pendingScore?.gameName} - {pendingScore?.scoreText}</h3>
-            <p className="text-xl text-green-500 mb-6 uppercase tracking-widest">Wpisz Inicjały:</p>
+            <p className="text-xl text-green-500 mb-6 uppercase tracking-widest">Wpisz Imię (max 12 znaków):</p>
             <input 
               type="text" 
-              maxLength={3} 
+              maxLength={12} 
               value={initials}
-              onChange={(e) => setInitials(e.target.value.replace(/[^a-zA-Z]/g, '').toUpperCase())}
+              onChange={(e) => setInitials(e.target.value.replace(/[^a-zA-Z ]/g, '').toUpperCase())}
               autoFocus
-              className="bg-transparent border-b-4 border-green-500 text-green-400 text-center text-6xl w-48 mb-12 outline-none focus:border-green-300 tracking-[0.3em] uppercase"
+              className="bg-transparent border-b-4 border-green-500 text-green-400 text-center text-4xl md:text-5xl w-full max-w-md mb-12 outline-none focus:border-green-300 tracking-widest uppercase pb-2"
             />
             <br />
             <button onClick={submitScore} className="bg-transparent border-4 border-green-500 text-green-500 hover:bg-green-500 hover:text-black font-bold py-3 px-12 text-2xl uppercase transition">
@@ -142,7 +143,7 @@ function App() {
       case 'scoreboard':
         return (
           <div className="bg-black p-8 rounded-3xl border-8 border-purple-600 font-mono shadow-[0_0_50px_rgba(147,51,234,0.3)] text-left w-full max-w-2xl max-h-[80vh] overflow-y-auto no-scrollbar">
-            <h2 className="text-4xl text-fuchsia-500 font-bold mb-8 text-center border-b-4 border-dashed border-fuchsia-800 pb-4">=== TOP 5 ODDKRYWCÓW ===</h2>
+            <h2 className="text-4xl text-fuchsia-500 font-bold mb-8 text-center border-b-4 border-dashed border-fuchsia-800 pb-4">=== TOP 5 ODKRYWCÓW ===</h2>
             
             {Object.keys(scores).length === 0 ? (
               <p className="text-green-400 text-center text-xl animate-pulse">BRAK DANYCH... ZAGRAJ!</p>
@@ -158,7 +159,7 @@ function App() {
                     </thead>
                     <tbody>
                       {/* WYŚWIETLAMY TYLKO TOP 5 DLA KAŻDEJ GRY */}
-                      {scores[game].slice(0, 5).map((s, idx) => (
+                      {scores[game].slice(0, 100).map((s, idx) => (
                         <tr key={idx} className={`border-b border-gray-800 ${idx === 0 ? 'text-yellow-300 font-bold' : ''}`}>
                           <td className="py-2">#{idx + 1}</td>
                           <td className="py-2 tracking-widest">{s.name}</td>
