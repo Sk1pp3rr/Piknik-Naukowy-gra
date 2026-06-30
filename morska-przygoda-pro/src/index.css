@@ -71,3 +71,8 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* Wyłączenie domyślnych ramek przeglądarki dla przycisków i inputów */
+button:focus, input:focus {
+  outline: none !important;
+}
