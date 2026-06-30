@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // Typujemy nasze dane
 type Question = {
@@ -8,7 +8,7 @@ type Question = {
   level: string;
 };
 
-const numOfQuestions = 10; // Ilość pytań na jedną grę
+const numOfQuestions = 10;
 
 const fallbackQuestions: Question[] = [
   { level: "baby", q: "Co pływa po wodzie? (Awaryjne)", a: ["Statek", "Samolot", "Samochód", "Rower"], c: 0 },
@@ -26,27 +26,107 @@ export default function Quiz({ goBack, onSaveScore }: { goBack: () => void, onSa
   const [loading, setLoading] = useState(false);
   const [debugMessage, setDebugMessage] = useState<string>('');
   
-  // Stany do obsługi neonowego cooldownu
   const [isRevealing, setIsRevealing] = useState(false);
   const [selectedAnswerIdx, setSelectedAnswerIdx] = useState<number | null>(null);
 
   const [startTime, setStartTime] = useState<number>(0);
   const [timeTaken, setTimeTaken] = useState<number>(0);
 
+  // --- SYSTEM PADA Oparty o czyste ID (HTML) ---
+  const [cursorIndex, setCursorIndex] = useState(0);
+  
+  // Przechowujemy tylko stan ekranu
+  const padStateRef = useRef({ 
+    cursorIndex, selectedLevel, isFinished, isRevealing, loading 
+  });
+  
+  useEffect(() => { 
+    padStateRef.current = { cursorIndex, selectedLevel, isFinished, isRevealing, loading }; 
+  }, [cursorIndex, selectedLevel, isFinished, isRevealing, loading]);
+
+  const lastNavTime = useRef(0);
+  const navCooldown = 250;
+
+  useEffect(() => {
+    let loopId: number;
+    let wasAPressed = false;
+
+    const pollGamepad = () => {
+      const pad = Array.from(navigator.getGamepads()).find(p => p !== null); 
+      if (pad) {
+        const now = Date.now();
+        const state = padStateRef.current;
+        const deadzone = 0.4; 
+        
+        const up = pad.buttons[12]?.pressed || pad.axes[1] < -deadzone;
+        const down = pad.buttons[13]?.pressed || pad.axes[1] > deadzone;
+        const left = pad.buttons[14]?.pressed || pad.axes[0] < -deadzone;
+        const right = pad.buttons[15]?.pressed || pad.axes[0] > deadzone;
+
+        // NAWIGACJA
+        if (now - lastNavTime.current > navCooldown && !state.isRevealing && !state.loading) {
+          
+          if (!state.selectedLevel) {
+            // EKRAN: Wybór Poziomu (Indeksy 0-4 pionowo)
+            if (down && state.cursorIndex < 4) { setCursorIndex(c => c + 1); lastNavTime.current = now; }
+            if (up && state.cursorIndex > 0) { setCursorIndex(c => c - 1); lastNavTime.current = now; }
+          
+          } else if (!state.isFinished) {
+            // EKRAN: Pytania (Indeksy 0,1,2,3 - Grid 2x2. Indeks 4 - Przerwij)
+            if (down) {
+              if (state.cursorIndex === 0 || state.cursorIndex === 1) setCursorIndex(c => c + 2);
+              else if (state.cursorIndex === 2 || state.cursorIndex === 3) setCursorIndex(4);
+              lastNavTime.current = now;
+            }
+            if (up) {
+              if (state.cursorIndex === 4) setCursorIndex(2);
+              else if (state.cursorIndex === 2 || state.cursorIndex === 3) setCursorIndex(c => c - 2);
+              lastNavTime.current = now;
+            }
+            if (right && (state.cursorIndex === 0 || state.cursorIndex === 2)) { setCursorIndex(c => c + 1); lastNavTime.current = now; }
+            if (left && (state.cursorIndex === 1 || state.cursorIndex === 3)) { setCursorIndex(c => c - 1); lastNavTime.current = now; }
+            
+          } else {
+            // EKRAN: Zakończenie (Indeksy 0,1 pionowo)
+            if (down && state.cursorIndex < 1) { setCursorIndex(1); lastNavTime.current = now; }
+            if (up && state.cursorIndex > 0) { setCursorIndex(0); lastNavTime.current = now; }
+          }
+        }
+
+        // AKCJA = SYMULACJA KLIKNIĘCIA PO ID HTML (TYLKO PRZYCISK A)
+        const isAPressed = pad.buttons[0]?.pressed;
+
+        if (isAPressed && !wasAPressed && !state.isRevealing && !state.loading) {
+           const btn = document.getElementById(`quiz-btn-${state.cursorIndex}`);
+           if (btn) btn.click();
+        }
+
+        wasAPressed = isAPressed;
+      }
+      loopId = requestAnimationFrame(pollGamepad);
+    };
+
+    pollGamepad();
+    return () => cancelAnimationFrame(loopId);
+  }, []); 
+
+  // --- LOGIKA GRY ---
+  const selectLevelAndReset = (lvl: string) => {
+    setSelectedLevel(lvl);
+    setCursorIndex(0); 
+  };
+
   useEffect(() => {
     if (!selectedLevel) return;
-
     setLoading(true);
     setDebugMessage('Szukam pliku w folderze public (./quiz.txt)...');
 
-    // Używamy ścieżki z kropką (./) dla poprawności w Electronie!
     fetch('./quiz.txt?t=' + Date.now())
       .then(res => {
-        if (!res.ok) throw new Error(`Błąd serwera: ${res.status}. Pliku nie ma w folderze głównym!`);
+        if (!res.ok) throw new Error(`Błąd serwera: ${res.status}`);
         return res.text();
       })
       .then(text => {
-        setDebugMessage('Plik wczytany! Analizuję treść...');
         const lines = text.split('\n').filter(l => l.trim().length > 0);
         const loaded: Question[] = [];
 
@@ -63,11 +143,7 @@ export default function Quiz({ goBack, onSaveScore }: { goBack: () => void, onSa
         });
 
         let pool = loaded.filter(q => q.level === selectedLevel);
-        
-        if (pool.length === 0) {
-          setDebugMessage(`Plik jest, ale brak pytań dla poziomu: ${selectedLevel}. Używam awaryjnych.`);
-          pool = fallbackQuestions.filter(q => q.level === selectedLevel);
-        }
+        if (pool.length === 0) pool = fallbackQuestions.filter(q => q.level === selectedLevel);
         if (pool.length === 0) pool = fallbackQuestions;
 
         setQuestions(pool.sort(() => 0.5 - Math.random()).slice(0, numOfQuestions));
@@ -77,10 +153,8 @@ export default function Quiz({ goBack, onSaveScore }: { goBack: () => void, onSa
       .catch((err) => {
         console.error(err);
         setDebugMessage(`❌ BŁĄD: ${err.message}`);
-        
         let pool = fallbackQuestions.filter(q => q.level === selectedLevel);
         if (pool.length === 0) pool = fallbackQuestions;
-        
         setQuestions(pool.sort(() => 0.5 - Math.random()).slice(0, numOfQuestions));
         setStartTime(Date.now());
         setTimeout(() => setLoading(false), 3000); 
@@ -88,73 +162,111 @@ export default function Quiz({ goBack, onSaveScore }: { goBack: () => void, onSa
   }, [selectedLevel]);
 
   const handleAnswer = (index: number) => {
-    // Blokujemy możliwość klikania innych odpowiedzi w trakcie pauzy
-    if (isRevealing) return;
+    if (isRevealing || questions.length === 0) return;
+    
+    const currentQ = questions[currentIndex];
+    if (!currentQ) return; 
 
-    // Zapisujemy, co kliknął gracz i włączamy tryb ujawniania
     setSelectedAnswerIdx(index);
     setIsRevealing(true);
 
-    const isCorrect = index === questions[currentIndex].c;
-    if (isCorrect) {
-      setScore(prev => prev + 1);
-    }
+    const isCorrect = index === currentQ.c;
+    if (isCorrect) setScore(prev => prev + 1);
 
-    // Ustawiamy timer na 4 sekundy (4000 ms), zanim przejdziemy dalej
     setTimeout(() => {
       if (currentIndex + 1 < questions.length) {
         setCurrentIndex(prev => prev + 1);
+        setCursorIndex(0); 
       } else {
         setTimeTaken(Math.floor((Date.now() - startTime) / 1000));
         setIsFinished(true);
+        setCursorIndex(0); 
       }
-      
-      // Resetujemy stany przed nowym pytaniem
       setIsRevealing(false);
       setSelectedAnswerIdx(null);
     }, 4000);
   };
 
   const getButtonClass = (index: number) => {
-    const baseClass = "font-semibold py-4 px-6 rounded-xl transition-all duration-300 transform border-2 ";
+    const baseClass = "font-semibold py-4 px-6 rounded-xl transition-all duration-300 border-2 ";
     const currentQ = questions[currentIndex];
     
-    // Zwykły styl przed sprawdzeniem
     if (!isRevealing) {
-      return baseClass + "bg-cyan-50 hover:bg-cyan-500 hover:text-white text-blue-900 border-cyan-400 hover:scale-105 shadow-sm";
+      if (cursorIndex === index) {
+        return baseClass + "bg-cyan-500 text-white border-yellow-400 ring-4 ring-yellow-400 scale-105 shadow-lg z-10";
+      }
+      return baseClass + "bg-cyan-50 text-blue-900 border-cyan-400 shadow-sm";
     }
 
-    // Tryb sprawdzania odpowiedzi (COOLDOWN)
-    const isCorrectAnswer = index === currentQ.c;
+    const isCorrectAnswer = index === currentQ?.c;
     const isSelectedAnswer = index === selectedAnswerIdx;
 
-    if (isCorrectAnswer) {
-      // PRAWIDŁOWA ODPOWIEDŹ -> ZIELONY NEON
-      return baseClass + "bg-green-500 text-white border-green-300 shadow-[0_0_20px_#4ade80,inset_0_0_10px_#4ade80] scale-105 z-10";
-    }
+    if (isCorrectAnswer) return baseClass + "bg-green-500 text-white border-green-300 shadow-[0_0_20px_#4ade80,inset_0_0_10px_#4ade80] scale-105 z-10";
+    if (isSelectedAnswer && !isCorrectAnswer) return baseClass + "bg-red-600 text-white border-red-400 shadow-[0_0_20px_#f87171,inset_0_0_10px_#f87171] scale-95";
     
-    if (isSelectedAnswer && !isCorrectAnswer) {
-      // BŁĘDNA ODPOWIEDŹ ZAZNACZONA PRZEZ GRACZA -> CZERWONY NEON
-      return baseClass + "bg-red-600 text-white border-red-400 shadow-[0_0_20px_#f87171,inset_0_0_10px_#f87171] scale-95";
-    }
-
-    // RESZTA ODPOWIEDZI (WYGASZENIE)
     return baseClass + "bg-gray-100 text-gray-400 border-gray-200 opacity-20 scale-90 pointer-events-none";
   };
 
+  // EKRAN WYBORU POZIOMU
   if (!selectedLevel) {
     return (
       <div className="flex flex-col items-center gap-4 w-full">
         <h2 className="text-3xl text-blue-900 font-bold mb-6">Wybierz poziom trudności</h2>
-        <button onClick={() => setSelectedLevel('baby')} className="bg-cyan-400 hover:bg-cyan-300 text-white font-bold py-3 px-8 rounded-full w-72 shadow-md transition transform hover:scale-105">👶 Mały Odkrywca (B. Łatwy)</button>
-        <button onClick={() => setSelectedLevel('easy')} className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-8 rounded-full w-72 shadow-md transition transform hover:scale-105">🏖️ Plażowicz (Łatwy)</button>
-        <button onClick={() => setSelectedLevel('medium')} className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-full w-72 shadow-md transition transform hover:scale-105">⚓ Wilk Morski (Średni)</button>
-        <button onClick={() => setSelectedLevel('hard')} className="bg-blue-800 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full w-72 shadow-md transition transform hover:scale-105">🌐 Modelarz (Trudny)</button>
-        <button onClick={goBack} className="mt-6 text-red-500 hover:text-red-400 font-bold underline">Wróć do Menu</button>
+        
+        <button 
+          id="quiz-btn-0"
+          onMouseEnter={() => setCursorIndex(0)} 
+          onClick={() => selectLevelAndReset('baby')} 
+          className={`font-bold py-3 px-8 rounded-full w-72 transition-all uppercase tracking-wider 
+            ${cursorIndex === 0 ? 'bg-cyan-400 text-white ring-4 ring-yellow-400 scale-110 shadow-lg' : 'bg-cyan-300 text-blue-900 shadow-sm'}`}
+        >
+          Mały Odkrywca
+        </button>
+        
+        <button 
+          id="quiz-btn-1"
+          onMouseEnter={() => setCursorIndex(1)} 
+          onClick={() => selectLevelAndReset('easy')} 
+          className={`font-bold py-3 px-8 rounded-full w-72 transition-all uppercase tracking-wider 
+            ${cursorIndex === 1 ? 'bg-cyan-600 text-white ring-4 ring-yellow-400 scale-110 shadow-lg' : 'bg-cyan-500 text-white shadow-sm'}`}
+        >
+          Plażowicz
+        </button>
+        
+        <button 
+          id="quiz-btn-2"
+          onMouseEnter={() => setCursorIndex(2)} 
+          onClick={() => selectLevelAndReset('medium')} 
+          className={`font-bold py-3 px-8 rounded-full w-72 transition-all uppercase tracking-wider 
+            ${cursorIndex === 2 ? 'bg-blue-600 text-white ring-4 ring-yellow-400 scale-110 shadow-lg' : 'bg-blue-500 text-white shadow-sm'}`}
+        >
+          Wilk Morski
+        </button>
+        
+        <button 
+          id="quiz-btn-3"
+          onMouseEnter={() => setCursorIndex(3)} 
+          onClick={() => selectLevelAndReset('hard')} 
+          className={`font-bold py-3 px-8 rounded-full w-72 transition-all uppercase tracking-wider 
+            ${cursorIndex === 3 ? 'bg-blue-800 text-white ring-4 ring-yellow-400 scale-110 shadow-lg' : 'bg-blue-700 text-white shadow-sm'}`}
+        >
+          Modelarz
+        </button>
+        
+        <button 
+          id="quiz-btn-4"
+          onMouseEnter={() => setCursorIndex(4)} 
+          onClick={goBack} 
+          className={`mt-6 font-bold py-2 px-6 rounded-full transition-all uppercase 
+            ${cursorIndex === 4 ? 'bg-gray-200 text-red-600 ring-4 ring-yellow-400 scale-105' : 'text-red-500 underline'}`}
+        >
+          Wróć do Menu
+        </button>
       </div>
     );
   }
 
+  // EKRAN ŁADOWANIA
   if (loading) return (
     <div className="flex flex-col items-center gap-4">
       <h2 className="text-2xl text-blue-900 font-bold animate-pulse">Przeszukiwanie głębin...</h2>
@@ -162,29 +274,43 @@ export default function Quiz({ goBack, onSaveScore }: { goBack: () => void, onSa
     </div>
   );
 
+  // EKRAN WYGRANEJ
   if (isFinished) {
     const percent = Math.round((score / questions.length) * 100);
     return (
-      <div className="flex flex-col items-center gap-4 p-8 w-full">
+      <div className="flex flex-col items-center gap-4 p-8 w-full animate-fadeIn">
         <h2 className="text-4xl text-blue-900 font-bold mb-2">Koniec Misji!</h2>
+        
         <div className="bg-white/80 p-6 rounded-2xl shadow-inner text-center w-full max-w-sm mb-4 border-2 border-white">
           <p className="text-lg text-gray-500 mb-1">Poziom: <span className="font-bold text-blue-800 uppercase">{selectedLevel === 'baby' ? 'mały odkrywca' : selectedLevel}</span></p>
           <p className="text-xl text-blue-800 mb-2">Wynik: <span className="font-bold text-green-600 text-3xl block">{percent}%</span></p>
           <p className="text-xl text-blue-800">Czas: <span className="font-bold text-orange-500">{timeTaken} s</span></p>
         </div>
+        
         <button 
+          id="quiz-btn-0"
+          onMouseEnter={() => setCursorIndex(0)} 
           onClick={() => onSaveScore(`QUIZ (${selectedLevel === 'baby' ? 'BABY' : selectedLevel?.toUpperCase()})`, `${percent}%`, percent, timeTaken)} 
-          className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 border-4 border-blue-900 font-extrabold py-3 px-8 rounded-full shadow-lg transform transition hover:-translate-y-1 text-xl"
+          className={`w-full max-w-sm font-extrabold py-4 px-8 rounded-full shadow-lg transition-all text-xl uppercase tracking-wider 
+            ${cursorIndex === 0 ? 'bg-yellow-400 text-blue-900 ring-4 ring-blue-500 scale-105' : 'bg-yellow-300 text-blue-900'}`}
         >
           Zapisz Wynik
         </button>
-        <button onClick={goBack} className="mt-4 text-gray-500 hover:text-gray-700 font-bold underline">
+        
+        <button 
+          id="quiz-btn-1"
+          onMouseEnter={() => setCursorIndex(1)} 
+          onClick={goBack} 
+          className={`mt-4 font-bold py-3 px-8 rounded-full transition-all uppercase 
+            ${cursorIndex === 1 ? 'bg-gray-200 text-gray-800 ring-4 ring-yellow-400 scale-105' : 'text-gray-500 underline'}`}
+        >
           Wróć do Menu
         </button>
       </div>
     );
   }
 
+  // EKRAN PYTAŃ (GRA)
   const currentQ = questions[currentIndex];
   if (!currentQ) return null;
 
@@ -197,9 +323,7 @@ export default function Quiz({ goBack, onSaveScore }: { goBack: () => void, onSa
       )}
       
       <div className="flex justify-between w-full mb-4 px-4">
-        <span className="text-lg text-cyan-600 font-bold uppercase tracking-wider">
-          Pytanie {currentIndex + 1} / {questions.length}
-        </span>
+        <span className="text-lg text-cyan-600 font-bold uppercase tracking-wider">Pytanie {currentIndex + 1} / {questions.length}</span>
         <span className="text-sm bg-blue-100 text-blue-800 py-1 px-3 rounded-full font-bold uppercase border border-blue-200 shadow-sm">
           Poziom: {selectedLevel === 'baby' ? 'mały odkrywca' : selectedLevel}
         </span>
@@ -210,13 +334,14 @@ export default function Quiz({ goBack, onSaveScore }: { goBack: () => void, onSa
       </p>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl mb-8 relative">
-        {/* Przezroczysta nakładka blokująca podwójne kliknięcie */}
         {isRevealing && <div className="absolute inset-0 z-20"></div>}
         
         {currentQ.a.map((answer, index) => (
-          <button
-            key={index}
-            onClick={() => handleAnswer(index)}
+          <button 
+            id={`quiz-btn-${index}`}
+            key={index} 
+            onMouseEnter={() => !isRevealing && setCursorIndex(index)} 
+            onClick={() => handleAnswer(index)} 
             className={getButtonClass(index)}
           >
             {answer}
@@ -224,7 +349,13 @@ export default function Quiz({ goBack, onSaveScore }: { goBack: () => void, onSa
         ))}
       </div>
       
-      <button onClick={goBack} className="text-red-400 hover:text-red-600 font-bold underline transition-colors">
+      <button 
+        id="quiz-btn-4"
+        onMouseEnter={() => !isRevealing && setCursorIndex(4)} 
+        onClick={goBack} 
+        className={`font-bold py-2 px-6 rounded-full transition-all uppercase 
+          ${cursorIndex === 4 && !isRevealing ? 'bg-gray-200 text-red-600 ring-4 ring-yellow-400 scale-105' : 'text-red-400 underline'}`}
+      >
         Przerwij Quiz
       </button>
     </div>

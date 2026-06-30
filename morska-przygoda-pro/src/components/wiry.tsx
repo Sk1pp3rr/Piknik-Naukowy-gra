@@ -64,7 +64,7 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
     stateRef.current = { cursorIndex, isPlaying, isFinished, finalScore }; 
   }, [cursorIndex, isPlaying, isFinished, finalScore]);
   
-  // ROZDZIELONE OPÓŹNIENIA DLA KONTROLERA
+  // OPÓŹNIENIA DLA KONTROLERA
   const lastNavTime = useRef(0);
   const lastSliderTime = useRef(0);
   const navCooldown = 250;
@@ -73,7 +73,6 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
   useEffect(() => {
     let loopId: number;
     let wasAPressed = false;
-    let wasBPressed = false;
 
     const pollGamepad = () => {
       const pad = Array.from(navigator.getGamepads()).find(p => p !== null); 
@@ -102,7 +101,7 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
           }
         }
 
-        // ZMIANA WARTOŚCI WIRÓW (Tylko w trakcie gry, dla elementów 0-2)
+        // ZMIANA WARTOŚCI WIRÓW
         if (!isFinished && !errorMsg && cursorIndex >= 0 && cursorIndex <= 2) {
           if ((left || right) && (now - lastSliderTime.current > sliderCooldown)) {
             const change = left ? -0.2 : 0.2;
@@ -121,7 +120,6 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
 
         // KLIKNIĘCIA (Uniwersalne przyciski akcji)
         const isAPressed = pad.buttons[0]?.pressed;
-        const isBPressed = pad.buttons[1]?.pressed;
 
         if (isAPressed && !wasAPressed) {
           if (isFinished) {
@@ -139,12 +137,7 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
           }
         }
 
-        if (isBPressed && !wasBPressed) {
-          goBack();
-        }
-
         wasAPressed = isAPressed;
-        wasBPressed = isBPressed;
       }
       loopId = requestAnimationFrame(pollGamepad);
     };
@@ -297,7 +290,7 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
   };
 
 
-  // ================= EKRAN WYGRANEJ =================
+  // EKRAN WYGRANEJ
   if (isFinished) {
     return (
       <div className="flex flex-col items-center gap-4 p-8 w-full max-w-md mx-auto animate-fadeIn">
@@ -342,7 +335,7 @@ export default function Wiry({ goBack, onSaveScore }: { goBack: () => void, onSa
     );
   }
 
-  // ================= EKRAN GŁÓWNY GIERKI =================
+  // EKRAN GŁÓWNY WIRÓW
   return (
     <div className="flex flex-col md:flex-row items-center md:items-start justify-center gap-10 w-full max-w-5xl mx-auto">
       
